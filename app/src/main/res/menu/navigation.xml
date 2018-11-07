@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_listing"
+        android:icon="@drawable/nav_listing"
+        android:title="@string/menu_title_listing"/>
+    <item
+        android:id="@+id/navigation_event"
+        android:icon="@drawable/nav_event"
+        android:title="@string/menu_title_event"/>
+    <item
+        android:id="@+id/navigation_money"
+        android:icon="@drawable/nav_money"
+        android:title="@string/menu_title_money"/>
+    <item
+        android:id="@+id/navigation_chat"
+        android:icon="@drawable/nav_chat"
+        android:title="@string/menu_title_chat"/>
+</menu>

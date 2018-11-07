@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "319584455673",
+    "firebase_url": "https://gestipi-428b5.firebaseio.com",
+    "project_id": "gestipi-428b5",
+    "storage_bucket": "gestipi-428b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319584455673:android:94b6e5c8895b6724",
+        "android_client_info": {
+          "package_name": "be.he2b.esi.moblg5.g43320.gestipi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319584455673-vg4kfghbffspuivb3frigga03l33g8k3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.he2b.esi.moblg5.g43320.gestipi",
+            "certificate_hash": "d5f156305f9a38eb5da5ef71bee2be4322dc319a"
+          }
+        },
+        {
+          "client_id": "319584455673-vsjaig7l6b3jji3ghaas5oitgi15cupl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA7zEnuE2GfdR4RE8vGNLsaLsXiblEy2k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "319584455673-vsjaig7l6b3jji3ghaas5oitgi15cupl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
