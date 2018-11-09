@@ -15,6 +15,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import be.he2b.esi.moblg5.g43320.gestipi.base.BaseActivity;
+import be.he2b.esi.moblg5.g43320.gestipi.fragment.MembersFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -29,6 +30,7 @@ public class MainActivity extends BaseActivity {
         BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.navigation);
         nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         toolbar.setTitle("Le Poste");
+        loadFragment(new MembersFragment());
     }
 
     private void loadFragment(Fragment Fragment) {
@@ -44,6 +46,7 @@ public class MainActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_listing:
                     toolbar.setTitle("Le Poste");
+                    loadFragment(new MembersFragment());
                     return true;
                 case R.id.navigation_event:
                     toolbar.setTitle("Les évènements");

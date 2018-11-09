@@ -1,5 +1,9 @@
 package be.he2b.esi.moblg5.g43320.gestipi.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Event {
 
     private String mId;
@@ -106,5 +110,21 @@ public class Event {
 
     public void setmImportance(int mImportance) {
         this.mImportance = mImportance;
+    }
+
+    private Date getDateFromString(String s){
+        try {
+            return new SimpleDateFormat("dd/MM/yyyy").parse(s);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public Date getStartingDate(){
+        return getDateFromString(mStartDate);
+    }
+
+    public Date getEndingDate(){
+        return getDateFromString(mEndDate);
     }
 }

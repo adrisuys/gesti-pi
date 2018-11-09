@@ -14,7 +14,8 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginTop="170dp">
+        android:layout_marginTop="100dp"
+        android:background="@color/colorPrimary">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,7 +24,8 @@
             android:textSize="@dimen/default_title_size"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:layout_margin="@dimen/default_margin" />
+            android:layout_margin="@dimen/default_margin"
+            android:background="@color/colorPrimary"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +33,8 @@
             android:textSize="@dimen/default_text_size"
             android:textColor="@color/white"
             android:text="@string/main_activity_description"
-            android:layout_margin="@dimen/default_margin"/>
+            android:layout_margin="@dimen/default_margin"
+            android:background="@color/colorPrimary"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -39,12 +42,19 @@
             android:background="@drawable/logo_pi"
             android:layout_margin="@dimen/default_large_margin"/>
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_bar"
+            android:indeterminate="true"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
             android:orientation="vertical"
-            android:layout_margin="@dimen/default_large_margin">
+            android:layout_margin="@dimen/default_large_margin"
+            android:background="@color/colorPrimary">
 
             <Button
                 android:id="@+id/login_activity_button_login"
@@ -53,11 +63,22 @@
                 android:text="@string/login"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/default_text_size"
-                android:background="@drawable/button_radius_primary_color"
+                android:background="@drawable/button_radius_white_color"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_margin="@dimen/default_large_margin"
-                android:padding="@dimen/default_large_margin"
-                android:onClick="onClickLoginButton"/>
+                android:layout_marginBottom="8dp"
+                android:padding="@dimen/default_large_margin"/>
+
+            <Button
+                android:id="@+id/login_activity_button_login_google"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_google"
+                android:drawableStart="@drawable/common_google_signin_btn_icon_light"
+                android:textColor="@color/white"
+                android:textSize="@dimen/default_text_size"
+                android:background="@drawable/button_radius_accent_color"
+                style="?android:attr/borderlessButtonStyle"
+                android:padding="@dimen/default_large_margin"/>
 
         </LinearLayout>
 

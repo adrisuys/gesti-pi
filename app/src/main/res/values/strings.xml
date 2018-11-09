@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">En Route Vers le Camp</string>
     <string name="main_activity_description">Gérer votre année chez les Pionniers</string>
-    <string name="login">Connexion</string>
+    <string name="login">Connexion via mail</string>
+    <string name="login_google">Connexion via Google</string>
 
     <!-- NOTIFICATION SERVICE -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

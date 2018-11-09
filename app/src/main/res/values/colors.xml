@@ -7,4 +7,5 @@
     <color name="light_yellow">#ea9b08</color>
     <color name="black">#000000</color>
     <color name="bg_main_activity">#d7b8b0</color>
+    <color name="red">#FF0000</color>
 </resources>

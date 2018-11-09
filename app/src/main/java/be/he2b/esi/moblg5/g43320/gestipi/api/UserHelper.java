@@ -17,7 +17,7 @@ import be.he2b.esi.moblg5.g43320.gestipi.model.User;
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
-    private static List<User> users = new ArrayList<>();
+    private static List<DocumentSnapshot> users = new ArrayList<>();
 
     // --- COLLECTION REFERENCE ---
 
@@ -29,11 +29,7 @@ public class UserHelper {
 
     public static Task<Void> createUser(String uid, String uTotem, String username, String userFirstName, String userEmail, String userPhone, String userGroup) {
         User userToCreate = new User(uid, uTotem, username, userFirstName, userEmail, userPhone, userGroup);
-        if (getUser(uid).equals(null)){
-            System.out.println("Il n'existe pas encore donc on le rajoute");
-            return UserHelper.getUsersCollection().document(uid).set(userToCreate);
-        }
-        return null;
+        return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
     // --- GET ---
@@ -56,23 +52,22 @@ public class UserHelper {
 
     // --- GET ALL USER ---
 
-    public static List<User> getAllUsers(){
-        getUsersCollection()
+    public static List<DocumentSnapshot> getAllUsers(){
+        FirebaseFirestore.getInstance()
+                .collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if ((task.isSuccessful())){
-                            for (DocumentSnapshot document : task.getResult()){
-                                users.add(getUserFromDocument(document));
-                            }
+                        if (task.isSuccessful()) {
+                            users = task.getResult().getDocuments();
                         }
                     }
                 });
         return users;
     }
 
-    private static User getUserFromDocument(DocumentSnapshot doc) {
+    /*private static User getUserFromDocument(DocumentSnapshot doc) {
         String id = (String) doc.get("mId");
         String totem = (String) doc.get("mTotem");
         String name = (String) doc.get("mName");
@@ -80,10 +75,11 @@ public class UserHelper {
         String email = (String) doc.get("mEmail");
         String phone = (String) doc.get("mPhoneNumber");
         String group = (String) doc.get("mGroup");
-        return new User(id, totem, name, firstname, email, phone, group);
-    }
+        boolean isChief = (boolean) doc.get("chief");
+        return new User(id, totem, name, firstname, email, phone, group, isChief);
+    }*/
 
-    public static List<User> getUserFromGroup(final String group){
+    /*public static List<User> getUserFromGroup(final String group){
         getUsersCollection()
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -99,9 +95,9 @@ public class UserHelper {
                     }
                 });
         return users;
-    }
+    }*/
 
     public static void updateUserChief(String uid, boolean isChecked) {
-        UserHelper.getUsersCollection().document(uid).update("mIsChief", isChecked);
+        UserHelper.getUsersCollection().document(uid).update("chief", isChecked);
     }
 }

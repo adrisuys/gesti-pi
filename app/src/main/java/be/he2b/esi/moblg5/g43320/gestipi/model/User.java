@@ -30,6 +30,17 @@ public class User {
         this.mIsChief = false;
     }
 
+    public User(String mId, String mTotem, String mName, String mFirstname, String mEmail, String mPhoneNumber, String mGroup, boolean mIsChief) {
+        this.mId = mId;
+        this.mTotem = mTotem;
+        this.mName = mName;
+        this.mFirstname = mFirstname;
+        this.mEmail = mEmail;
+        this.mPhoneNumber = mPhoneNumber;
+        this.mGroup = mGroup;
+        this.mIsChief = mIsChief;
+    }
+
     public String getmId() {
         return mId;
     }
