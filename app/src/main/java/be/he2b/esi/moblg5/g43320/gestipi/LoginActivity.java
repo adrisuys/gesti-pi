@@ -80,11 +80,7 @@ public class LoginActivity extends BaseActivity {
 
     public void onClickLoginButton(boolean viaMail) {
         progressBar.setVisibility(View.VISIBLE);
-        if (this.isCurrentUserLogged()){
-            changingScreen();
-        } else {
-            this.startSignInActivity(viaMail);
-        }
+        this.startSignInActivity(viaMail);
     }
 
     private void changingScreen(){

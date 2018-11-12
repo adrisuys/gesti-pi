@@ -18,10 +18,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/members_call"
-        android:background="@drawable/ic_call_black_24dp"/>
+        android:text="APPEL"
+        android:textColor="@color/bg_main_activity"
+        android:background="@color/colorPrimary"
+        android:layout_marginRight="10dp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/members_mail"
-        android:background="@drawable/ic_email_black_24dp"/>
+        android:text="EMAIL"
+        android:textColor="@color/bg_main_activity"
+        android:background="@color/colorPrimary"/>
 </LinearLayout>

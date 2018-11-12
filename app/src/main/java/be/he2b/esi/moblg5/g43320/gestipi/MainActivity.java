@@ -13,14 +13,21 @@ import android.view.MenuItem;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import be.he2b.esi.moblg5.g43320.gestipi.api.UserHelper;
 import be.he2b.esi.moblg5.g43320.gestipi.base.BaseActivity;
 import be.he2b.esi.moblg5.g43320.gestipi.fragment.MembersFragment;
+import be.he2b.esi.moblg5.g43320.gestipi.model.User;
 
 public class MainActivity extends BaseActivity {
 
     private ActionBar toolbar;
     private static final int SIGN_OUT_TASK = 10;
+    List<User> users = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +37,21 @@ public class MainActivity extends BaseActivity {
         BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.navigation);
         nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         toolbar.setTitle("Le Poste");
-        loadFragment(new MembersFragment());
+        setMembersFragment();
+        //loadFragment(new MembersFragment());
+    }
+
+    private void setMembersFragment(){
+        //List<User> users = new ArrayList<>();
+        /*List<DocumentSnapshot> dss = UserHelper.getAllUsers();
+        System.out.println("nb of users : " + dss.size());
+        for (DocumentSnapshot ds : dss){
+            users.add(ds.toObject(User.class));
+        }*/
+        users.add(new User("1", "Axis", "Doe", "John", "jd@dr.be", "0456789342", "Cordée 1", true));
+        MembersFragment fragment = new MembersFragment();
+        fragment.setUsers(users);
+        loadFragment(fragment);
     }
 
     private void loadFragment(Fragment Fragment) {
@@ -46,7 +67,8 @@ public class MainActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_listing:
                     toolbar.setTitle("Le Poste");
-                    loadFragment(new MembersFragment());
+                    //loadFragment(new MembersFragment());
+                    setMembersFragment();
                     return true;
                 case R.id.navigation_event:
                     toolbar.setTitle("Les évènements");

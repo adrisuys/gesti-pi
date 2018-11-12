@@ -5,13 +5,17 @@ import android.support.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import be.he2b.esi.moblg5.g43320.gestipi.MainActivity;
 import be.he2b.esi.moblg5.g43320.gestipi.model.User;
 
 public class UserHelper {
@@ -53,9 +57,7 @@ public class UserHelper {
     // --- GET ALL USER ---
 
     public static List<DocumentSnapshot> getAllUsers(){
-        FirebaseFirestore.getInstance()
-                .collection("users")
-                .get()
+        getUsersCollection().get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
