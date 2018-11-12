@@ -42,13 +42,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setMembersFragment(){
-        //List<User> users = new ArrayList<>();
-        /*List<DocumentSnapshot> dss = UserHelper.getAllUsers();
+        users.clear();
+        List<DocumentSnapshot> dss = UserHelper.getAllUsers();
         System.out.println("nb of users : " + dss.size());
         for (DocumentSnapshot ds : dss){
             users.add(ds.toObject(User.class));
-        }*/
-        users.add(new User("1", "Axis", "Doe", "John", "jd@dr.be", "0456789342", "Cordée 1", true));
+        }
+        //users.add(new User("1", "Axis", "Doe", "John", "jd@dr.be", "0456789342", "Cordée 1", true));
         MembersFragment fragment = new MembersFragment();
         fragment.setUsers(users);
         loadFragment(fragment);

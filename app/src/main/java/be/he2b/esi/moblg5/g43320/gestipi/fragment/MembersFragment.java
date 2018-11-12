@@ -38,6 +38,8 @@ public class MembersFragment extends Fragment {
     Intent emailIntent;
     private static final int REQUEST_CODE = 45;
 
+
+
     public void setUsers(List<User> users){
         this.users = users;
     }
