@@ -87,13 +87,15 @@ public class LoginActivity extends BaseActivity {
         UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User currentUser = documentSnapshot.toObject(User.class);
-                if (currentUser.needToBeUpdate()){
-                    // encore des données à rajouter
-                    switchActivity(ProfileActivity.class);
-                } else {
-                    // plus à modifier, on passe directement à l'activité principale
-                    switchActivity(MainActivity.class);
+                if (documentSnapshot.exists()){
+                    User currentUser = documentSnapshot.toObject(User.class);
+                    if (currentUser.needToBeUpdate()){
+                        // encore des données à rajouter
+                        switchActivity(ProfileActivity.class);
+                    } else {
+                        // plus à modifier, on passe directement à l'activité principale
+                        switchActivity(MainActivity.class);
+                    }
                 }
             }
         });

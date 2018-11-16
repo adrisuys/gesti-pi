@@ -33,16 +33,9 @@ public class MembersFragment extends Fragment {
 
     private RecyclerView mMembersRecyclerView;
     private MembersAdapter mMembersAdapter;
-    private List<User> users;
     Intent callIntent;
     Intent emailIntent;
     private static final int REQUEST_CODE = 45;
-
-
-
-    public void setUsers(List<User> users){
-        this.users = users;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -55,10 +48,17 @@ public class MembersFragment extends Fragment {
 
     public void onResume(){
         super.onResume();
-        updateUI();
+        //updateUI();
     }
 
     private void updateUI(){
+        List<User> users = new ArrayList<>();
+        List<DocumentSnapshot> dss = UserHelper.getAllUsers();
+        for (DocumentSnapshot ds : dss){
+            System.out.println("onCreateView - boucle");
+            users.add(ds.toObject(User.class));
+        }
+        System.out.println("onCreateView");
         if (mMembersAdapter == null){
             mMembersAdapter = new MembersAdapter(users);
             mMembersRecyclerView.setAdapter(mMembersAdapter);
@@ -132,7 +132,7 @@ public class MembersFragment extends Fragment {
         public void bind(User user){
             mUser = user;
             String pseudo = user.getmTotem().equals("") ? user.getmName() : user.getmTotem();
-            mUserName.setText(String.format("%1$-" + 50 + "s", pseudo));
+            mUserName.setText(pseudo);
         }
 
     }

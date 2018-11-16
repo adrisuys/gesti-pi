@@ -27,7 +27,6 @@ public class MainActivity extends BaseActivity {
 
     private ActionBar toolbar;
     private static final int SIGN_OUT_TASK = 10;
-    List<User> users = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +36,11 @@ public class MainActivity extends BaseActivity {
         BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.navigation);
         nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         toolbar.setTitle("Le Poste");
-        setMembersFragment();
-        //loadFragment(new MembersFragment());
+        loadFragment(new MembersFragment());
     }
 
-    private void setMembersFragment(){
-        users.clear();
-        List<DocumentSnapshot> dss = UserHelper.getAllUsers();
-        System.out.println("nb of users : " + dss.size());
-        for (DocumentSnapshot ds : dss){
-            users.add(ds.toObject(User.class));
-        }
-        //users.add(new User("1", "Axis", "Doe", "John", "jd@dr.be", "0456789342", "Cordée 1", true));
-        MembersFragment fragment = new MembersFragment();
-        fragment.setUsers(users);
-        loadFragment(fragment);
+    protected void onResume(){
+        super.onResume();
     }
 
     private void loadFragment(Fragment Fragment) {
@@ -67,8 +56,7 @@ public class MainActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_listing:
                     toolbar.setTitle("Le Poste");
-                    //loadFragment(new MembersFragment());
-                    setMembersFragment();
+                    loadFragment(new MembersFragment());
                     return true;
                 case R.id.navigation_event:
                     toolbar.setTitle("Les évènements");

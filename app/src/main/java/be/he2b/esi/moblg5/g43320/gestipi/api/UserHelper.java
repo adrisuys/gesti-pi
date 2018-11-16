@@ -3,6 +3,7 @@ package be.he2b.esi.moblg5.g43320.gestipi.api;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -20,7 +21,7 @@ import be.he2b.esi.moblg5.g43320.gestipi.model.User;
 
 public class UserHelper {
 
-    private static final String COLLECTION_NAME = "users";
+    private static final String COLLECTION_NAME = "/users";
     private static List<DocumentSnapshot> users = new ArrayList<>();
 
     // --- COLLECTION REFERENCE ---
@@ -63,6 +64,8 @@ public class UserHelper {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             users = task.getResult().getDocuments();
+                        } else {
+                            System.out.println("my problem : " + task.getException().getMessage());
                         }
                     }
                 });

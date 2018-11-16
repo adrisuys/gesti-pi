@@ -10,7 +10,7 @@
     android:layout_marginRight="8dp"
     android:background="@drawable/members_item_borders">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/members_info_name"
         android:textColor="@color/colorPrimary"/>

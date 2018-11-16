@@ -8,13 +8,13 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:background="@color/bg_main_activity">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/events_icon"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/events_title"
         android:textColor="@color/colorPrimary"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/events_icon"/>
 </LinearLayout>
