@@ -1,47 +1,216 @@
 package be.he2b.esi.moblg5.g43320.gestipi.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
+import be.he2b.esi.moblg5.g43320.gestipi.MainActivity;
 import be.he2b.esi.moblg5.g43320.gestipi.R;
-import be.he2b.esi.moblg5.g43320.gestipi.api.UserHelper;
-import be.he2b.esi.moblg5.g43320.gestipi.model.Event;
-import be.he2b.esi.moblg5.g43320.gestipi.model.User;
+import be.he2b.esi.moblg5.g43320.gestipi.ViewEventActivity;
+import be.he2b.esi.moblg5.g43320.gestipi.db_access.EventHelper;
+import be.he2b.esi.moblg5.g43320.gestipi.pojo.Event;
+import be.he2b.esi.moblg5.g43320.gestipi.pojo.Type;
+import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
 
 public class EventsFragment extends Fragment {
 
     private RecyclerView mEventsRecyclerView;
     private EventsAdapter mEventsAdapter;
+    private List<Event> events = new ArrayList<>();
+    private Button mAddBtn;
+    private User currentUser;
+    private static final String UPDATE = "1";
+    private static final String CREATE = "0";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        System.out.println("OncreateView");
         View view = inflater.inflate(R.layout.events_fragment, container, false);
-        mEventsRecyclerView = (RecyclerView) view.findViewById(R.id.members_recycler_view);
-        mEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
+        mEventsRecyclerView = (RecyclerView) view.findViewById(R.id.events_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        mEventsRecyclerView.setLayoutManager(layoutManager);
+        mEventsRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(4), true));
+        mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mEventsRecyclerView.setNestedScrollingEnabled(false);
+        currentUser = ((MainActivity)getActivity()).getCurrentUser();
+        mEventsAdapter = new EventsAdapter(events, currentUser);
+        mEventsRecyclerView.setAdapter(mEventsAdapter);
+        mAddBtn = (Button) view.findViewById(R.id.event_add_btn);
+        boolean isChief = currentUser != null ? currentUser.isChief() : false;
+        handleAddBtn(isChief);
+        updateOnEvent();
         return view;
     }
 
+    private void handleAddBtn(boolean isChief){
+        if (!isChief){
+            mAddBtn.setVisibility(View.GONE);
+        } else {
+            mAddBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), ViewEventActivity.class);
+                    intent.putExtra("currentUser", currentUser);
+                    intent.putExtra("mode", CREATE);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
     public void onResume(){
+        System.out.println("OnResume");
         super.onResume();
-        updateUI();
+        if (events.size() != 0){
+            updateUI();
+            System.out.println("Resume Fait");
+        }
+    }
+
+    private void updateOnEvent(){
+        EventHelper.getEventsCollection().addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null){
+                    Log.d("EventsFragment", "Error "+e.getMessage());
+                }
+                for (DocumentChange doc : documentSnapshots.getDocumentChanges()){
+                    if (doc.getType() == DocumentChange.Type.ADDED){
+                        try {
+                            Event event = getEventFromSnapchot(doc.getDocument());
+                            events.add(event);
+                            mEventsAdapter.notifyDataSetChanged();
+                        } catch (NullPointerException ex){
+                            Toast.makeText(getContext(), "Impossible d'afficher les évènements", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+            }
+        });
     }
 
     private void updateUI(){
-        //
+        events.clear();
+        EventHelper.getEventsCollection().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        events.add(document.toObject(Event.class));
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        deleteEventsIfPast();
+        mEventsAdapter.setmEvents(events);
+        mEventsRecyclerView.setAdapter(mEventsAdapter);
+        mEventsAdapter.notifyDataSetChanged();
+    }
+
+    private void deleteEventsIfPast(){
+        if (!events.isEmpty()){
+            for (Event e : events){
+                try {
+                    Date d = new SimpleDateFormat("dd/MM/yyyy").parse(e.getmEndDate());
+                    if (d.compareTo(new Date()) < 0){
+                        events.remove(e);
+                        EventHelper.deleteEvent(e.getmId());
+                    }
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private Event getEventFromSnapchot(DocumentSnapshot document) {
+        if (document == null){
+            throw new NullPointerException();
+        } else {
+            String id = (String) document.get("mId");
+            String title = (String) document.get("mTitle");
+            String location = (String) document.get("mLocation");
+            String startDate = (String) document.get("mStartDate");
+            String startTime = (String) document.get("mStartTime");
+            String endDate = (String) document.get("mEndDate");
+            String endTime = (String) document.get("mEndTime");
+            String desc = (String) document.get("mDescription");
+            String typeStr = (String) document.get("mType");
+            String importance = (String) document.get("mImportance");
+            Type type = Type.valueOf(typeStr);
+            return new Event(id, title, location, startDate, startTime, endDate, endTime, desc, type, importance);
+        }
+    }
+
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
     }
 
     private class EventsHolder extends RecyclerView.ViewHolder {
@@ -49,23 +218,31 @@ public class EventsFragment extends Fragment {
         private Event mEvent;
         private TextView mEventTitle;
         private Button mEventIcon;
+        private User mUser;
 
-        public EventsHolder(LayoutInflater inflater, ViewGroup parent){
-            super(inflater.inflate(R.layout.member_infos_item, parent, false));
+        public EventsHolder(LayoutInflater inflater, ViewGroup parent, User user){
+            super(inflater.inflate(R.layout.events_item, parent, false));
             mEventTitle = (TextView) itemView.findViewById(R.id.events_title);
             mEventIcon = (Button) itemView.findViewById(R.id.events_icon);
+            mUser = user;
             mEventIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // do some
+                    Intent intent = new Intent(getActivity(), ViewEventActivity.class);
+                    intent.putExtra("mode", UPDATE);
+                    intent.putExtra("event_id", mEvent.getmId());
+                    intent.putExtra("currentUser", mUser);
+                    startActivity(intent);
                 }
             });
         }
 
         public void bind(Event event){
-            mEvent = event;
-            mEventTitle.setText(event.getmTitle());
-            setButtonIcons();
+            if (event != null){
+                mEvent = event;
+                mEventTitle.setText(event.getmTitle());
+                setButtonIcons();
+            }
         }
 
         private void setButtonIcons(){
@@ -89,15 +266,16 @@ public class EventsFragment extends Fragment {
                     mEventIcon.setBackgroundResource(R.drawable.event_else_type);
             }
         }
-
     }
 
     private class EventsAdapter extends RecyclerView.Adapter<EventsHolder>{
 
         private List<Event> mEvents;
+        private User mUser;
 
-        public EventsAdapter(List<Event> events){
+        public EventsAdapter(List<Event> events, User user){
             mEvents = events;
+            mUser = user;
             Collections.sort(mEvents, new Comparator<Event>(){
                 public int compare(Event e1, Event e2) {
                     return e1.getStartingDate().compareTo(e2.getStartingDate());
@@ -108,7 +286,7 @@ public class EventsFragment extends Fragment {
         @Override
         public EventsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new EventsHolder(layoutInflater, parent);
+            return new EventsHolder(layoutInflater, parent, mUser);
         }
 
         @Override
@@ -126,13 +304,16 @@ public class EventsFragment extends Fragment {
             return mEvents;
         }
 
-        public void setEvents(List<Event> events) {
-            this.mEvents = events;
-            Collections.sort(mEvents, new Comparator<Event>(){
-                public int compare(Event e1, Event e2) {
-                    return e1.getStartingDate().compareTo(e2.getStartingDate());
-                }
-            });
+        public void setmEvents(List<Event> events){
+            mEvents = events;
+            if (mEvents != null || !mEvents.isEmpty()) {
+                Collections.sort(mEvents, new Comparator<Event>() {
+                    public int compare(Event e1, Event e2) {
+                        return e1.getStartingDate().compareTo(e2.getStartingDate());
+                    }
+                });
+            }
         }
+
     }
 }

@@ -10,24 +10,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import org.w3c.dom.Document;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import be.he2b.esi.moblg5.g43320.gestipi.MainActivity;
 import be.he2b.esi.moblg5.g43320.gestipi.R;
-import be.he2b.esi.moblg5.g43320.gestipi.api.UserHelper;
-import be.he2b.esi.moblg5.g43320.gestipi.model.User;
+import be.he2b.esi.moblg5.g43320.gestipi.db_access.UserHelper;
+import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
 
 public class MembersFragment extends Fragment {
 
@@ -36,36 +37,49 @@ public class MembersFragment extends Fragment {
     Intent callIntent;
     Intent emailIntent;
     private static final int REQUEST_CODE = 45;
+    List<User> users = new ArrayList<>();
+    Button addBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.members_fragment, container, false);
         mMembersRecyclerView = (RecyclerView) view.findViewById(R.id.members_recycler_view);
         mMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mMembersAdapter = new MembersAdapter(users);
+        mMembersRecyclerView.setAdapter(mMembersAdapter);
+        addBtn = (Button) view.findViewById(R.id.event_add_btn);
         updateUI();
         return view;
+    }
+
+    private void updateUI(){
+        UserHelper.getUsersCollection().addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null){
+                    Log.d("MembersFragment", "Error "+e.getMessage());
+                }
+                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                    if (doc != null){
+                        User user = doc.getDocument().toObject(User.class);
+                        if (doc.getType() == DocumentChange.Type.REMOVED){
+                            users.remove(user);
+                        } else {
+                            users.add(user);
+                        }
+                        mMembersAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getContext(), "Impossible de récupérer les utilisateurs", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
     }
 
     public void onResume(){
         super.onResume();
         //updateUI();
-    }
-
-    private void updateUI(){
-        List<User> users = new ArrayList<>();
-        List<DocumentSnapshot> dss = UserHelper.getAllUsers();
-        for (DocumentSnapshot ds : dss){
-            System.out.println("onCreateView - boucle");
-            users.add(ds.toObject(User.class));
-        }
-        System.out.println("onCreateView");
-        if (mMembersAdapter == null){
-            mMembersAdapter = new MembersAdapter(users);
-            mMembersRecyclerView.setAdapter(mMembersAdapter);
-        } else {
-            mMembersAdapter.setUsers(users);
-            mMembersAdapter.notifyDataSetChanged();
-        };
     }
 
     private class MembersHolder extends RecyclerView.ViewHolder {
@@ -130,11 +144,15 @@ public class MembersFragment extends Fragment {
         }
 
         public void bind(User user){
-            mUser = user;
-            String pseudo = user.getmTotem().equals("") ? user.getmName() : user.getmTotem();
-            mUserName.setText(pseudo);
-        }
+            if (user != null) {
+                mUser = user;
+                String pseudo = user.getmTotem().equals("") ? user.getmName() : user.getmTotem();
+                mUserName.setText(pseudo);
+            } else {
+                Toast.makeText(getContext(), "Impossible d'afficher les données de l'utilisateur", Toast.LENGTH_SHORT).show();
+            }
 
+        }
     }
 
     private class MembersAdapter extends RecyclerView.Adapter<MembersHolder> {

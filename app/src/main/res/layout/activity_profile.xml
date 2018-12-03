@@ -1,97 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ProfileActivity"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ProfileActivity">
+    android:layout_width="match_parent">
 
-    <!-- PROGRESS BAR -->
-    <ProgressBar
-        android:id="@+id/profile_activity_progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_margin="@dimen/default_large_margin"/>
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
     <LinearLayout
+        android:id="@+id/profile_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
-        android:padding="10dp">
+        app:layout_constraintBottom_toTopOf="@+id/profile_firstname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOM : " />
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/profile_name_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_firstname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/profile_totem"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRENOM : " />
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/profile_firstname_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_totem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/profile_email"
+        app:layout_constraintTop_toBottomOf="@+id/profile_firstname">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOTEM : " />
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/profile_totem_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/profile_phone"
+        app:layout_constraintTop_toBottomOf="@+id/profile_totem">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E-MAIL : " />
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/profile_email_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/profile_name"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="NOM : " />
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/profile_name_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_firstname"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PRENOM : " />
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/profile_firstname_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_totem"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TOTEM : " />
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/profile_totem_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_email"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="E-MAIL : " />
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/profile_email_edit"
-                android:inputType="textEmailAddress"/>
-        </LinearLayout>
+            android:inputType="textEmailAddress" />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/profile_phone"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/profile_email"
+            app:layout_constraintBottom_toTopOf="@+id/profile_group">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,8 +128,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/profile_group"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/profile_phone"
+            app:layout_constraintBottom_toTopOf="@+id/profile_is_chief">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,8 +150,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/profile_is_chief"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/profile_group"
+            app:layout_constraintBottom_toTopOf="@+id/profile_btn_update">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,6 +169,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
@@ -150,8 +181,10 @@
             android:background="@drawable/button_radius_primary_color"
             android:textColor="@color/bg_main_activity"
             android:onClick="onClickUpdateButton"
+            app:layout_constraintTop_toBottomOf="@+id/profile_is_chief"
+            app:layout_constraintBottom_toBottomOf="parent"
             />
 
-    </LinearLayout>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
+</ScrollView>

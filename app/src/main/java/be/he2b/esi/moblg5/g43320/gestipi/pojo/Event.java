@@ -1,4 +1,4 @@
-package be.he2b.esi.moblg5.g43320.gestipi.model;
+package be.he2b.esi.moblg5.g43320.gestipi.pojo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,12 +15,25 @@ public class Event {
     private String mEndTime;
     private String mDescription;
     private Type mType;
-    private int mImportance;
+    private String mImportance;
 
-    private Event(){}
+    public Event(){
+    }
 
-    public Event(String mId, String mTitle, String mLocation, String mStartDate, String mStartTime, String mEndDate, String mEndTime, String mDescription, Type mType, int mImportance) {
+    public Event(String mId, String mTitle, String mLocation, String mStartDate, String mStartTime, String mEndDate, String mEndTime, String mDescription, Type mType, String mImportance) {
         this.mId = mId;
+        this.mTitle = mTitle;
+        this.mLocation = mLocation;
+        this.mStartDate = mStartDate;
+        this.mStartTime = mStartTime;
+        this.mEndDate = mEndDate;
+        this.mEndTime = mEndTime;
+        this.mDescription = mDescription;
+        this.mType = mType;
+        this.mImportance = (mType == Type.AUTRES ? mImportance : mType.getImportance());
+    }
+
+    public Event(String mTitle, String mLocation, String mStartDate, String mStartTime, String mEndDate, String mEndTime, String mDescription, Type mType, String mImportance) {
         this.mTitle = mTitle;
         this.mLocation = mLocation;
         this.mStartDate = mStartDate;
@@ -104,11 +117,11 @@ public class Event {
         this.mType = mType;
     }
 
-    public int getmImportance() {
+    public String getmImportance() {
         return mImportance;
     }
 
-    public void setmImportance(int mImportance) {
+    public void setmImportance(String mImportance) {
         this.mImportance = mImportance;
     }
 

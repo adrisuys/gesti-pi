@@ -13,20 +13,23 @@ import android.view.MenuItem;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import be.he2b.esi.moblg5.g43320.gestipi.api.UserHelper;
 import be.he2b.esi.moblg5.g43320.gestipi.base.BaseActivity;
+import be.he2b.esi.moblg5.g43320.gestipi.fragment.ChatFragment;
+import be.he2b.esi.moblg5.g43320.gestipi.fragment.EventsFragment;
+import be.he2b.esi.moblg5.g43320.gestipi.fragment.FinanceFragment;
 import be.he2b.esi.moblg5.g43320.gestipi.fragment.MembersFragment;
-import be.he2b.esi.moblg5.g43320.gestipi.model.User;
+import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
 
 public class MainActivity extends BaseActivity {
 
     private ActionBar toolbar;
     private static final int SIGN_OUT_TASK = 10;
+    private List<User> users = new ArrayList<>();
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class MainActivity extends BaseActivity {
         toolbar = getSupportActionBar();
         BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.navigation);
         nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        currentUser = (User) getIntent().getSerializableExtra("currentUser");
         toolbar.setTitle("Le Poste");
         loadFragment(new MembersFragment());
     }
@@ -46,7 +50,6 @@ public class MainActivity extends BaseActivity {
     private void loadFragment(Fragment Fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, Fragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -60,12 +63,15 @@ public class MainActivity extends BaseActivity {
                     return true;
                 case R.id.navigation_event:
                     toolbar.setTitle("Les évènements");
+                    loadFragment(new EventsFragment());
                     return true;
                 case R.id.navigation_money:
                     toolbar.setTitle("Le budget camp");
+                    loadFragment(new FinanceFragment());
                     return true;
                 case R.id.navigation_chat:
                     toolbar.setTitle("Discussion");
+                    loadFragment(new ChatFragment());
                     return true;
             }
             return false;
@@ -86,7 +92,9 @@ public class MainActivity extends BaseActivity {
                 this.signOutUserFromFirebase();
                 return true;
             case R.id.menu_update_profile:
-                startActivity(new Intent(this, ProfileActivity.class));
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("currentUser", currentUser);
+                startActivity(intent);
                 return true;
             default:
                 return true;
@@ -108,5 +116,9 @@ public class MainActivity extends BaseActivity {
                 finish();
             }
         };
+    }
+
+    public User getCurrentUser(){
+        return currentUser;
     }
 }

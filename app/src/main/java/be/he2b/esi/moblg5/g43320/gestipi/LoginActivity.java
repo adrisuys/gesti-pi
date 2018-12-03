@@ -3,14 +3,9 @@ package be.he2b.esi.moblg5.g43320.gestipi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -25,11 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import be.he2b.esi.moblg5.g43320.gestipi.api.UserHelper;
+import be.he2b.esi.moblg5.g43320.gestipi.db_access.UserHelper;
 import be.he2b.esi.moblg5.g43320.gestipi.base.BaseActivity;
-import be.he2b.esi.moblg5.g43320.gestipi.model.User;
-import butterknife.BindView;
-import butterknife.OnClick;
+import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
 
 public class LoginActivity extends BaseActivity {
 
@@ -70,11 +63,11 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateUIWhenResuming();
     }
 
-    private void switchActivity(Class e){
+    private void switchActivity(Class e, User user){
         Intent intent = new Intent(this, e);
+        intent.putExtra("currentUser", user);
         startActivity(intent);
     }
 
@@ -84,17 +77,17 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void changingScreen(){
-        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        UserHelper.getUser(this.getCurrentUserFirebase().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()){
                     User currentUser = documentSnapshot.toObject(User.class);
                     if (currentUser.needToBeUpdate()){
                         // encore des données à rajouter
-                        switchActivity(ProfileActivity.class);
+                        switchActivity(ProfileActivity.class, currentUser);
                     } else {
                         // plus à modifier, on passe directement à l'activité principale
-                        switchActivity(MainActivity.class);
+                        switchActivity(MainActivity.class, currentUser);
                     }
                 }
             }
@@ -152,15 +145,15 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void createUserInFirestore() {
-        UserHelper.getUser(this.getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        UserHelper.getUser(this.getCurrentUserFirebase().getUid()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> doc) {
                 if(!doc.getResult().exists()){
-                    String uid = getCurrentUser().getUid();
+                    String uid = getCurrentUserFirebase().getUid();
                     String totem = "";
-                    String name = getCurrentUser().getDisplayName();
+                    String name = getCurrentUserFirebase().getDisplayName();
                     String firstname = "";
-                    String email = getCurrentUser().getEmail();
+                    String email = getCurrentUserFirebase().getEmail();
                     String phone = "";
                     String group = "";
                     UserHelper.createUser(uid,totem,name,firstname,email,phone,group);
@@ -169,7 +162,4 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void updateUIWhenResuming(){
-        // rien
-    }
 }

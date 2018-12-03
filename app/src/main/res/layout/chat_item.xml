@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/chat_item_root">
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/chat_item_container"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_radius_primary_color">
+
+        <ImageView
+            android:id="@+id/chat_item_image_sent"
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:scaleType="centerCrop"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/button_radius_primary_color"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="J'aurai un peu de retard à cause des bouchons."
+            android:padding="5dp"
+            android:textColor="@color/bg_main_activity"
+            android:id="@+id/chat_item_message"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adri"
+            android:textColor="@color/bg_main_activity"
+            android:id="@+id/chat_item_username"
+            android:textSize="9dp"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12/12/12 14:16"
+            android:textColor="@color/bg_main_activity"
+            android:id="@+id/chat_item_timestamp"
+            android:textSize="9dp"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

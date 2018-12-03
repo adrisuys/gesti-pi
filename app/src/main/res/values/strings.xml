@@ -32,6 +32,27 @@
         <item>Cordée 4</item>
     </string-array>
 
+    <!-- TYPE REUNION -->
+    <string name="type_prompt">Choissisez un type de réunion</string>
+    <string-array name="type_arrays">
+        <item>REUNION</item>
+        <item>HIKE</item>
+        <item>BAR PI</item>
+        <item>BAR PI SPECIAL</item>
+        <item>OPE BOUFFE</item>
+        <item>BAL PI</item>
+        <item>SOIREE</item>
+        <item>REUNION POUR LE CAMP</item>
+        <item>CAMP</item>
+        <item>AUTRES</item>
+    </string-array>
+
+    <string-array name="importance_arrays">
+        <item>NORMAL</item>
+        <item>IMPORTANT</item>
+        <item>TRES IMPORTANT</item>
+    </string-array>
+
     <!-- LOGIN ACTIVITY -->
     <string name="toolbar_title_login_activity">Votre Profil</string>
     <string name="text_input_username">Nom d\'utilisateur</string>

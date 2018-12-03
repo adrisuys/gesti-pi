@@ -1,12 +1,10 @@
-package be.he2b.esi.moblg5.g43320.gestipi.model;
+package be.he2b.esi.moblg5.g43320.gestipi.pojo;
 
 import android.support.annotation.Nullable;
+import java.util.Observable;
+import java.io.Serializable;
 
-import com.google.android.gms.tasks.Task;
-
-import be.he2b.esi.moblg5.g43320.gestipi.api.UserHelper;
-
-public class User {
+public class User extends Observable implements Serializable {
 
     private String mId;
     @Nullable private String mTotem;
