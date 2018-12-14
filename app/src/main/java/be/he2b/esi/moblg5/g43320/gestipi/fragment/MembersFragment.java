@@ -49,7 +49,7 @@ public class MembersFragment extends Fragment {
         mMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMembersAdapter = new MembersAdapter(users);
         mMembersRecyclerView.setAdapter(mMembersAdapter);
-        MembersItemViewModel viewModel = new MembersItemViewModel(this, ((MainActivity) getActivity()).getCurrentUser());
+        MembersItemViewModel viewModel = new MembersItemViewModel((MainActivity) getActivity(), ((MainActivity) getActivity()).getCurrentUser());
         membersBinding.setViewModel(viewModel);
         updateUI();
         return membersBinding.getRoot();
@@ -132,7 +132,7 @@ public class MembersFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(MembersHolder holder, int position) {
-            viewModel = new MembersItemViewModel((MembersFragment) getParentFragment(), users.get(position));
+            viewModel = new MembersItemViewModel((MainActivity) getActivity(), users.get(position));
             holder.binding.setViewModel(viewModel);
         }
 
@@ -145,8 +145,6 @@ public class MembersFragment extends Fragment {
     public void filter(String text){
         List<User> filterdNames = new ArrayList<>();
         for (User s : users) {
-            System.out.println("--------"+text);
-            System.out.println("--------"+s.getPseudo());
             if (s.getPseudo().toLowerCase().contains(text.toLowerCase())) {
                 //adding the element to filtered list
                 filterdNames.add(s);

@@ -25,14 +25,14 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
     public final ObservableField<String> mUserName = new ObservableField<>();
     private Intent callIntent;
     private final User mUser;
-    private final MembersFragment activity;
+    private final MainActivity activity;
 
     /**
      * Creates an instance of the class
      * @param activity the activity on which the class depends
      * @param mUser the current user
      */
-    public MembersItemViewModel(MembersFragment activity, User mUser) {
+    public MembersItemViewModel(MainActivity activity, User mUser) {
         this.activity = activity;
         this.mUser = mUser;
         setNickname();
@@ -70,9 +70,9 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
     }
 
     private void performCall(Intent callIntent) {
-        if (ContextCompat.checkSelfPermission(activity.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            if (! ActivityCompat.shouldShowRequestPermissionRationale(activity.getActivity(), Manifest.permission.CALL_PHONE)) {
-                ActivityCompat.requestPermissions(activity.getActivity(), new String[]{
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (! ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CALL_PHONE)) {
+                ActivityCompat.requestPermissions(activity, new String[]{
                         Manifest.permission.CALL_PHONE
                 }, REQUEST_CODE);
             }
@@ -83,8 +83,24 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
 
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         //activity.getmMembersAdapter().getFilter().filter(s);
-        activity.filter(s.toString());
+        //activity.filter(s.toString());
     }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults, Intent intent) {
+        switch (requestCode) {
+            case REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    activity.startActivity(callIntent);
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
+
 
     @Override
     public void onCreate() {
