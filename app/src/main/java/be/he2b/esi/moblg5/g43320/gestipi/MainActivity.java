@@ -1,12 +1,9 @@
 package be.he2b.esi.moblg5.g43320.gestipi;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,69 +11,39 @@ import android.view.MenuItem;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import be.he2b.esi.moblg5.g43320.gestipi.base.BaseActivity;
-import be.he2b.esi.moblg5.g43320.gestipi.fragment.ChatFragment;
-import be.he2b.esi.moblg5.g43320.gestipi.fragment.EventsFragment;
-import be.he2b.esi.moblg5.g43320.gestipi.fragment.FinanceFragment;
-import be.he2b.esi.moblg5.g43320.gestipi.fragment.MembersFragment;
+import be.he2b.esi.moblg5.g43320.gestipi.databinding.ActivityMainBinding;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
+import be.he2b.esi.moblg5.g43320.gestipi.viewmodel.MainViewModel;
 
+/**
+ * Handles the main screen with the navigation bottom bar
+ * There are 4 Fragments
+ *   - a screen on which one can see the infos of the different members
+ *   - a screen on which one can see the different events
+ *   - a screen on which one can see the budget infos of the organization
+ *   - a screen containing a group chat
+ */
 public class MainActivity extends BaseActivity {
 
-    private ActionBar toolbar;
-    private static final int SIGN_OUT_TASK = 10;
-    private List<User> users = new ArrayList<>();
     private User currentUser;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toolbar = getSupportActionBar();
-        BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.navigation);
-        nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        BottomNavigationView bottomNav = binding.navigation;
+        viewModel = new MainViewModel(this, bottomNav);
+        binding.setViewModel(viewModel);
         currentUser = (User) getIntent().getSerializableExtra("currentUser");
-        toolbar.setTitle("Le Poste");
-        loadFragment(new MembersFragment());
     }
 
-    protected void onResume(){
+    @Override
+    protected void onResume() {
         super.onResume();
+        viewModel.onResume();
     }
-
-    private void loadFragment(Fragment Fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, Fragment);
-        transaction.commit();
-    }
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_listing:
-                    toolbar.setTitle("Le Poste");
-                    loadFragment(new MembersFragment());
-                    return true;
-                case R.id.navigation_event:
-                    toolbar.setTitle("Les évènements");
-                    loadFragment(new EventsFragment());
-                    return true;
-                case R.id.navigation_money:
-                    toolbar.setTitle("Le budget camp");
-                    loadFragment(new FinanceFragment());
-                    return true;
-                case R.id.navigation_chat:
-                    toolbar.setTitle("Discussion");
-                    loadFragment(new ChatFragment());
-                    return true;
-            }
-            return false;
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,15 +68,15 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void signOutUserFromFirebase(){
+    private void signOutUserFromFirebase() {
         AuthUI.getInstance()
                 .signOut(this)
-                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted(SIGN_OUT_TASK));
+                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(final int origin){
+    private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted() {
         return new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -118,7 +85,16 @@ public class MainActivity extends BaseActivity {
         };
     }
 
-    public User getCurrentUser(){
+    /**
+     * Returns the current user using the app
+     * @return the current user using the app
+     */
+    public User getCurrentUser() {
         return currentUser;
+    }
+
+    @Override
+    public void onBackPressed(){
+        // handles the back press on the main screen --> do nothing because it is impossible to go back further
     }
 }

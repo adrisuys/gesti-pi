@@ -1,3 +1,10 @@
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="be.he2b.esi.moblg5.g43320.gestipi.viewmodel.EventsViewModel"/>
+    </data>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -11,11 +18,15 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/events_icon"/>
+        android:id="@+id/events_icon"
+        android:onClick="@{() -> viewModel.onClickViewBtn()}"
+        android:background="@drawable/event_play_type"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/events_title"
         android:textColor="@color/colorPrimary"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:text="@{viewModel.title}"/>
 </LinearLayout>
+</layout>

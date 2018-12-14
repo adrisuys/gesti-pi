@@ -1,210 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ViewEventActivity">
-    <ScrollView
+    android:id="@+id/activity_view_event">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="be.he2b.esi.moblg5.g43320.gestipi.viewmodel.EventUpdateViewModel"/>
+    </data>
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="match_parent"
+        tools:context=".UpdateEventActivity">
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:orientation="vertical">
-            <!--TITLE-->
+            android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_title"
-                android:layout_marginTop="10dp"
+                android:layout_height="match_parent"
+                android:padding="10dp"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="REUNION : " />
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/event_title_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <!--LOCATION-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_location"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LOCAL / LIEU DE RDV : " />
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/event_location_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <!--START_DATE-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_starting_date"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="JOUR DE DEBUT : " />
-                <android.support.design.widget.TextInputEditText
+                <!--TITLE-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/event_starting_date_string"
-                    android:inputType="date"/>
-            </LinearLayout>
-            <!--START_TIME-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_starting_time"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="HEURE DE DEBUT : " />
-                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/event_title"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="REUNION : " />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_title_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.name}"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:textColor="@{viewModel.isRed ? @color/red : @color/black}"/>
+                </LinearLayout>
+                <!--LOCATION-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/event_starting_time_string"
-                    android:inputType="time"/>
-            </LinearLayout>
-            <!--END_DATE-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_ending_date"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="JOUR DE FIN : " />
-                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/event_location"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LOCAL / LIEU DE RDV : " />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_location_edit"
+                        android:text="@={viewModel.location}"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <!--START_DATE-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/event_ending_date_string"
-                    android:inputType="date"/>
-            </LinearLayout>
-            <!--END_TIME-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_ending_time"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="HEURE DE FIN : " />
-                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/event_starting_date"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="JOUR DE DEBUT : " />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_start_date_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.startDate}"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
+                        android:inputType="date"/>
+                </LinearLayout>
+                <!--START_TIME-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/event_ending_time_string"
-                    android:inputType="time"/>
-            </LinearLayout>
-            <!--TYPE-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_type"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TYPE : " />
-                <Spinner
-                    android:id="@+id/event_type_edit"
+                    android:id="@+id/event_starting_time"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HEURE DE DEBUT : " />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_start_time_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.startTime}"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
+                        android:inputType="time"/>
+                </LinearLayout>
+                <!--END_DATE-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/type_arrays"
-                    android:prompt="@string/type_prompt"/>
-            </LinearLayout>
-            <!--IF TYPE = AUTRES-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_type_else"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="QUELLE EST L'IMPORTANCE DE CETTE ACTIVITE ? : " />
-                <Spinner
-                    android:id="@+id/event_importance_edit"
+                    android:id="@+id/event_ending_date"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="JOUR DE FIN : " />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_end_date_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.endDate}"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
+                        android:inputType="date"/>
+                </LinearLayout>
+                <!--END_TIME-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/importance_arrays" />
-            </LinearLayout>
-            <!--DESCRIPTION-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/event_desc"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DESCRIPTION : " />
-                <EditText
-                    android:id="@+id/event_desc_edit"
+                    android:id="@+id/event_ending_time"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HEURE DE FIN : " />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/event_end_time_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.endTime}"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
+                        android:inputType="time"/>
+                </LinearLayout>
+                <!--TYPE-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:lines="8"
-                    android:maxLines="10"
-                    android:minLines="6"
-                    android:scrollbars="vertical"
-                    android:background="@drawable/border_text_area"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
+                    android:id="@+id/event_type"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TYPE : " />
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_text_area"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:onCheckedChanged="@{viewModel::onCheckedChange}">
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="REUNION"
+                            android:id="@+id/radio_button_type_reunion"
+                            android:checked="@{viewModel.type.equals(`REUNION`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="HIKE"
+                            android:id="@+id/radio_button_type_hike"
+                            android:checked="@{viewModel.type.equals(`HIKE`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="BAR PI"
+                            android:id="@+id/radio_button_type_barpi"
+                            android:checked="@{viewModel.type.equals(`BAR PI`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="BAR PI SPECIAL"
+                            android:id="@+id/radio_button_type_barpi_special"
+                            android:checked="@{viewModel.type.equals(`BAR PI SPECIAL`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="OPE BOUFFE"
+                            android:id="@+id/radio_button_type_ope_bouffe"
+                            android:checked="@{viewModel.type.equals(`OPE BOUFFE`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="BAL PI"
+                            android:id="@+id/radio_button_type_balpi"
+                            android:checked="@{viewModel.type.equals(`BAL PI`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="SOIREE"
+                            android:id="@+id/radio_button_type_soiree"
+                            android:checked="@{viewModel.type.equals(`SOIREE`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="REUNION POUR LE CAMP"
+                            android:id="@+id/radio_button_type_reunion_camp"
+                            android:checked="@{viewModel.type.equals(`REUNION POUR LE CAMP`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CAMP"
+                            android:id="@+id/radio_button_type_camp"
+                            android:checked="@{viewModel.type.equals(`CAMP`) ? true : false}"/>
+                        <RadioButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="AUTRES"
+                            android:id="@+id/radio_button_type_other"
+                            android:checked="@{viewModel.type.equals(`AUTRES`) ? true : false}"/>
+                    </RadioGroup>
+                </LinearLayout>
+                <!--DESCRIPTION-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/event_desc"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DESCRIPTION : " />
+                    <EditText
+                        android:text="@={viewModel.desc}"
+                        android:enabled="@{viewModel.isChief ? true : false}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:lines="8"
+                        android:maxLines="10"
+                        android:minLines="6"
+                        android:scrollbars="vertical"
+                        android:background="@drawable/border_text_area"/>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
-                    android:text="ENREGISTRER"
-                    android:id="@+id/event_btn_update"
-                    android:background="@drawable/button_radius_primary_color"
-                    android:textColor="@color/bg_main_activity"
-                    android:onClick="handleClickUpdate"
-                    android:layout_marginRight="5dp"
-                    />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
-                    android:text="ANNULER"
-                    android:id="@+id/event_btn_cancel"
-                    android:background="@drawable/button_radius_primary_color"
-                    android:textColor="@color/bg_main_activity"
-                    android:onClick="handleClickCancel"
-                    />
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/event_update_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingRight="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:text="ENREGISTRER"
+                        android:visibility="@{viewModel.isChief ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/button_radius_primary_color"
+                        android:textColor="@color/bg_main_activity"
+                        android:onClick="@{() -> viewModel.handleClickUpdate()}"
+                        android:layout_marginRight="5dp"
+                        />
+                    <Button
+                        android:id="@+id/event_cancel_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingRight="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:text="ANNULER"
+                        android:visibility="@{viewModel.isChief ? View.VISIBLE : View.GONE}"
+                        android:background="@drawable/button_radius_primary_color"
+                        android:textColor="@color/bg_main_activity"
+                        android:onClick="@{() -> viewModel.handleClickCancel()}"
+                        />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="be.he2b.esi.moblg5.g43320.gestipi.viewmodel.MembersItemViewModel"/>
+    </data>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
@@ -13,7 +20,8 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/members_info_name"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorPrimary"
+        android:text="@={viewModel.mUserName}"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,12 +29,15 @@
         android:text="APPEL"
         android:textColor="@color/bg_main_activity"
         android:background="@color/colorPrimary"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:onClick="@{() -> viewModel.onClickCallBtn()}"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/members_mail"
         android:text="EMAIL"
         android:textColor="@color/bg_main_activity"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorPrimary"
+        android:onClick="@{() -> viewModel.onClickEmailBtn()}"/>
 </LinearLayout>
+</layout>

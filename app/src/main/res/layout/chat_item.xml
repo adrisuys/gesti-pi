@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="be.he2b.esi.moblg5.g43320.gestipi.viewmodel.ChatItemViewModel"/>
+    </data>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/chat_item_root">
+    android:id="@+id/chat_item_root"
+    android:layout_marginBottom="10dp"
+    >
     
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/chat_item_container"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/button_radius_primary_color">
+        android:background="@{viewModel.isSenderUser ? @drawable/button_radius_primary_color : @drawable/button_radius_white_color}"
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/chat_item_image_sent"
@@ -19,29 +28,33 @@
             android:layout_height="100dip"
             android:scaleType="centerCrop"
             android:layout_alignParentTop="true"
-            android:background="@drawable/button_radius_primary_color"/>
+            android:visibility="@{viewModel.hasImage ? View.VISIBLE : View.GONE}"
+            android:background="@{viewModel.isSenderUser ? @drawable/button_radius_primary_color : @drawable/button_radius_white_color}"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="J'aurai un peu de retard à cause des bouchons."
+            android:text="@={viewModel.messageContent}"
             android:padding="5dp"
-            android:textColor="@color/bg_main_activity"
+            android:textColor="@{viewModel.isSenderUser ? @color/bg_main_activity : @color/black}"
             android:id="@+id/chat_item_message"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Adri"
-            android:textColor="@color/bg_main_activity"
+            android:text="@={viewModel.username}"
+            android:textColor="@{viewModel.isSenderUser ? @color/bg_main_activity : @color/black}"
             android:id="@+id/chat_item_username"
             android:textSize="9dp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:visibility="@{viewModel.isSenderUser ? View.GONE : View.VISIBLE}"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12/12/12 14:16"
-            android:textColor="@color/bg_main_activity"
+            android:text="@={viewModel.timestamps}"
+            android:textColor="@{viewModel.isSenderUser ? @color/bg_main_activity : @color/black}"
             android:id="@+id/chat_item_timestamp"
             android:textSize="9dp"
             android:layout_marginLeft="10dp"/>
@@ -49,3 +62,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+</layout>

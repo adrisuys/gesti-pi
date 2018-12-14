@@ -1,197 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:background="@color/bg_main_activity"
-    tools:context="be.he2b.esi.moblg5.g43320.gestipi.fragment.FinanceFragment"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <android.support.constraint.ConstraintLayout
+<layout>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="be.he2b.esi.moblg5.g43320.gestipi.viewmodel.FinanceViewModel"/>
+    </data>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/bg_main_activity"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <TextView
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:gravity="center_horizontal"
-            android:text="BUDGET TOTAL : "
-            android:textColor="@color/colorPrimary"
-            android:textSize="30dp"
-            android:id="@+id/money_overall_label"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/money_overall"
-            />
-
-        <TextView
-            android:id="@+id/money_overall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="20dp"
-            android:background="@drawable/border_background_beige"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="12 000 €"
-            android:textColor="@color/colorPrimary"
-            android:textSize="30dp"
-            app:layout_constraintTop_toBottomOf="@+id/money_overall_label"
-            app:layout_constraintBottom_toTopOf="@+id/sum_cordée1"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:id="@+id/sum_cordée1"
-            app:layout_constraintTop_toBottomOf="@+id/money_overall"
-            app:layout_constraintBottom_toTopOf="@+id/sum_cordée2">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gold" />
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/money_group1_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cordée 1 : "
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:gravity="center_horizontal"
+                android:text="BUDGET TOTAL : "
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
+                android:textSize="30dp"
+                android:id="@+id/money_overall_label"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/money_overall"
+                />
 
             <TextView
-                android:id="@+id/money_group1"
-                android:layout_width="wrap_content"
+                android:id="@+id/money_overall"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1 €"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20dp"
+                android:background="@drawable/border_background_beige"
+                android:gravity="center_horizontal"
+                android:padding="5dp"
+                android:text="@{viewModel.overall}"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
-        </LinearLayout>
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/money_overall_label"
+                app:layout_constraintBottom_toTopOf="@+id/sum_cordée1"
+                />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:id="@+id/sum_cordée2"
-            app:layout_constraintTop_toBottomOf="@+id/sum_cordée1"
-            app:layout_constraintBottom_toTopOf="@+id/sum_cordée3">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:id="@+id/sum_cordée1"
+                app:layout_constraintTop_toBottomOf="@+id/money_overall"
+                app:layout_constraintBottom_toTopOf="@+id/sum_cordée2">
 
-            <ImageView
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gold" />
+
+                <TextView
+                    android:id="@+id/money_group1_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group1Name}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/money_group1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group1}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:id="@+id/sum_cordée2"
+                app:layout_constraintTop_toBottomOf="@+id/sum_cordée1"
+                app:layout_constraintBottom_toTopOf="@+id/sum_cordée3">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/silver" />
+
+                <TextView
+                    android:id="@+id/money_group2_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group2Name}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/money_group2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group2}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:id="@+id/sum_cordée3"
+                app:layout_constraintTop_toBottomOf="@+id/sum_cordée2"
+                app:layout_constraintBottom_toTopOf="@+id/sum_cordée4">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bronze" />
+
+                <TextView
+                    android:id="@+id/money_group3_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group3Name}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/money_group3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group3}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:id="@+id/sum_cordée4"
+                app:layout_constraintTop_toBottomOf="@+id/sum_cordée3"
+                app:layout_constraintBottom_toTopOf="@+id/money_btn_update">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/money_group4_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group4Name}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/money_group4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.group4}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/money_btn_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/silver" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/button_radius_primary_color"
+                android:gravity="center_horizontal"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="13dp"
+                android:text="METTRE A JOUR"
+                android:textColor="@color/bg_main_activity"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sum_cordée4"
+                android:visibility="@{viewModel.isChief ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> viewModel.handleClickOnUpdate()}"/>
+        </android.support.constraint.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/money_group2_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cordée 2 : "
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/money_group2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2 €"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:id="@+id/sum_cordée3"
-            app:layout_constraintTop_toBottomOf="@+id/sum_cordée2"
-            app:layout_constraintBottom_toTopOf="@+id/sum_cordée4">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bronze" />
-
-            <TextView
-                android:id="@+id/money_group3_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cordée 3 : "
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/money_group3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3 €"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:id="@+id/sum_cordée4"
-            app:layout_constraintTop_toBottomOf="@+id/sum_cordée3"
-            app:layout_constraintBottom_toTopOf="@+id/money_btn_update">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/money_group4_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cordée 4 : "
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/money_group4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4 €"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/money_btn_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/button_radius_primary_color"
-            android:gravity="center_horizontal"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="13dp"
-            android:text="METTRE A JOUR"
-            android:textColor="@color/bg_main_activity"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sum_cordée4" />
-    </android.support.constraint.ConstraintLayout>
-
-</ScrollView>
+    </ScrollView>
+</layout>

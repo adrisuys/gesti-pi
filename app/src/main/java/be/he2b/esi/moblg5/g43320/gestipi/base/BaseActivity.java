@@ -10,11 +10,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import be.he2b.esi.moblg5.g43320.gestipi.R;
 
+/**
+ * The base Activity that launches the app
+ */
 public abstract class BaseActivity extends AppCompatActivity {
-
-    // --------------------
-    // LIFE CYCLE
-    // --------------------
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,22 +21,29 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_login);
     }
 
-    // --------------------
-    // UI
-    // --------------------
-
-    protected void configureToolbar(){
+    /**
+     * Configure the toolbar
+     */
+    protected void configureToolbar() {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
-    // --------------------
-    // UTILS
-    // --------------------
-
+    /**
+     * Get the current user logged in the Firebase DB
+     * @return the user currently logged and using the app
+     */
     @Nullable
-    protected FirebaseUser getCurrentUserFirebase(){ return FirebaseAuth.getInstance().getCurrentUser(); }
+    public FirebaseUser getCurrentUserFirebase() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
 
-    protected Boolean isCurrentUserLogged(){ return (this.getCurrentUserFirebase() != null); }
+    /**
+     * Specifies if the current user is logged.
+     * @return true if he is logged, false otherwise.
+     */
+    public Boolean isCurrentUserLogged() {
+        return (this.getCurrentUserFirebase() != null);
+    }
 }
 

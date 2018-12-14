@@ -1,190 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ProfileActivity"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:id="@+id/activity_profile">
+    <data>
+        <import type="android.view.View"/>
+        <variable name="viewModel" type="be.he2b.esi.moblg5.g43320.gestipi.viewmodel.ProfileViewModel"/>
+    </data>
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
-<android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp">
-
-    <LinearLayout
-        android:id="@+id/profile_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/profile_firstname"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NOM : " />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/profile_name_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/profile_firstname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/profile_totem"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PRENOM : " />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/profile_firstname_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/profile_totem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/profile_email"
-        app:layout_constraintTop_toBottomOf="@+id/profile_firstname">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TOTEM : " />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/profile_totem_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/profile_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/profile_phone"
-        app:layout_constraintTop_toBottomOf="@+id/profile_totem">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="E-MAIL : " />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/profile_email_edit"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
-    </LinearLayout>
+            android:padding="10dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_phone"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/profile_email"
-            app:layout_constraintBottom_toTopOf="@+id/profile_group">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GSM : " />
-            <android.support.design.widget.TextInputEditText
+            <LinearLayout
+                android:id="@+id/profile_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/profile_phone_edit"
-                android:inputType="phone"/>
-        </LinearLayout>
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/profile_firstname"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_group"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/profile_phone"
-            app:layout_constraintBottom_toTopOf="@+id/profile_is_chief">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CORDEE : " />
-            <Spinner
-                android:id="@+id/profile_group_edit"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NOM : " />
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/profile_name_input"
+                    android:text = "@={viewModel.name}"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/profile_firstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/group_arrays"
-                android:prompt="@string/group_prompt" />
-        </LinearLayout>
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/profile_totem"
+                app:layout_constraintTop_toBottomOf="@+id/profile_name">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_is_chief"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/profile_group"
-            app:layout_constraintBottom_toTopOf="@+id/profile_btn_update">
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PRENOM : " />
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={viewModel.firstname}"
+                    android:id="@+id/profile_firstname_input"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/profile_totem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/profile_email"
+                app:layout_constraintTop_toBottomOf="@+id/profile_firstname">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TOTEM : " />
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/profile_totem_input"
+                    android:text="@={viewModel.totem}"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/profile_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/profile_phone"
+                app:layout_constraintTop_toBottomOf="@+id/profile_totem">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="E-MAIL : " />
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:text="@={viewModel.email}"
+                    android:id="@+id/profile_email_input"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_phone"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/profile_email"
+                app:layout_constraintBottom_toTopOf="@+id/profile_group">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GSM : " />
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:text="@={viewModel.phone}"
+                    android:id="@+id/profile_phone_input"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_group"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/profile_phone"
+                app:layout_constraintBottom_toTopOf="@+id/profile_is_chief">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CORDEE : " />
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_text_area"
+                    android:id="@+id/profile_group_radio_group"
+                    android:onCheckedChanged="@{viewModel::onCheckedChange}">
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radio_button_cordee1"
+                        android:text="Cordée 1"
+                        android:checked="@{viewModel.indexGroup == 0 ? true : false}"/>
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radio_button_cordee2"
+                        android:text="Cordée 2"
+                        android:checked="@{viewModel.indexGroup == 1 ? true : false}"/>
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radio_button_cordee3"
+                        android:text="Cordée 3"
+                        android:checked="@{viewModel.indexGroup == 2 ? true : false}"/>
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radio_button_cordee4"
+                        android:text="Cordée 4"
+                        android:checked="@{viewModel.indexGroup == 3 ? true : false}"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_is_chief"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/profile_group"
+                app:layout_constraintBottom_toTopOf="@+id/profile_btn_update">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ES-TU CHEF ? : " />
+                <CheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/profile_is_chief_checkbox"
+                    android:checked="@{viewModel.isChief}"
+                    android:onClick="@{viewModel::onCheckboxChange}"
+                    />
+            </LinearLayout>
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ES-TU CHEF ? : " />
-            <CheckBox
-                android:id="@+id/profile_is_chief_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:text="ENREGISTRER"
-            android:id="@+id/profile_btn_update"
-            android:background="@drawable/button_radius_primary_color"
-            android:textColor="@color/bg_main_activity"
-            android:onClick="onClickUpdateButton"
-            app:layout_constraintTop_toBottomOf="@+id/profile_is_chief"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:text="ENREGISTRER"
+                android:id="@+id/profile_btn_update"
+                android:background="@drawable/button_radius_primary_color"
+                android:textColor="@color/bg_main_activity"
+                android:onClick="@{()->viewModel.onClickUpdateButton()}"
+                app:layout_constraintTop_toBottomOf="@+id/profile_is_chief"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
 
 
-</android.support.constraint.ConstraintLayout>
-</ScrollView>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</layout>

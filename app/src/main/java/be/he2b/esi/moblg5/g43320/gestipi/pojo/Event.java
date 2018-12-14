@@ -3,7 +3,11 @@ package be.he2b.esi.moblg5.g43320.gestipi.pojo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
+/**
+ * Represents a event
+ */
 public class Event {
 
     private String mId;
@@ -15,12 +19,22 @@ public class Event {
     private String mEndTime;
     private String mDescription;
     private Type mType;
-    private String mImportance;
 
-    public Event(){
-    }
+    public Event(){}
 
-    public Event(String mId, String mTitle, String mLocation, String mStartDate, String mStartTime, String mEndDate, String mEndTime, String mDescription, Type mType, String mImportance) {
+    /**
+     * Creates an event
+     * @param mId the id
+     * @param mTitle the name
+     * @param mLocation the location
+     * @param mStartDate the starting date
+     * @param mStartTime the starting time
+     * @param mEndDate the end date
+     * @param mEndTime the end time
+     * @param mDescription the description
+     * @param mType the type
+     */
+    public Event(String mId, String mTitle, String mLocation, String mStartDate, String mStartTime, String mEndDate, String mEndTime, String mDescription, Type mType) {
         this.mId = mId;
         this.mTitle = mTitle;
         this.mLocation = mLocation;
@@ -30,10 +44,20 @@ public class Event {
         this.mEndTime = mEndTime;
         this.mDescription = mDescription;
         this.mType = mType;
-        this.mImportance = (mType == Type.AUTRES ? mImportance : mType.getImportance());
     }
 
-    public Event(String mTitle, String mLocation, String mStartDate, String mStartTime, String mEndDate, String mEndTime, String mDescription, Type mType, String mImportance) {
+    /**
+     * Creates an event without id
+     * @param mTitle the name
+     * @param mLocation the location
+     * @param mStartDate the starting date
+     * @param mStartTime the starting time
+     * @param mEndDate the end date
+     * @param mEndTime the end time
+     * @param mDescription the description
+     * @param mType the type
+     */
+    public Event(String mTitle, String mLocation, String mStartDate, String mStartTime, String mEndDate, String mEndTime, String mDescription, Type mType) {
         this.mTitle = mTitle;
         this.mLocation = mLocation;
         this.mStartDate = mStartDate;
@@ -42,102 +66,94 @@ public class Event {
         this.mEndTime = mEndTime;
         this.mDescription = mDescription;
         this.mType = mType;
-        this.mImportance = (mType == Type.AUTRES ? mImportance : mType.getImportance());
     }
 
+    /**
+     * Returns the id of the event
+     * @return the id of the event
+     */
     public String getmId() {
         return mId;
     }
 
-    public void setmId(String mId) {
-        this.mId = mId;
-    }
-
+    /**
+     * Returns the name of the event
+     * @return the name of the event
+     */
     public String getmTitle() {
         return mTitle;
     }
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
+    /**
+     * Returns the location of the event
+     * @return the location of the event
+     */
     public String getmLocation() {
         return mLocation;
     }
 
-    public void setmLocation(String mLocation) {
-        this.mLocation = mLocation;
-    }
-
+    /**
+     * Returns the starting date of the event
+     * @return the starting of the event as a String
+     */
     public String getmStartDate() {
         return mStartDate;
     }
 
-    public void setmStartDate(String mStartDate) {
-        this.mStartDate = mStartDate;
-    }
-
+    /**
+     * Returns the starting time of the event
+     * @return the starting time of the event
+     */
     public String getmStartTime() {
         return mStartTime;
     }
 
-    public void setmStartTime(String mStartTime) {
-        this.mStartTime = mStartTime;
-    }
-
+    /**
+     * Returns the ending date of the event
+     * @return the ending date of the event
+     */
     public String getmEndDate() {
         return mEndDate;
     }
 
-    public void setmEndDate(String mEndDate) {
-        this.mEndDate = mEndDate;
-    }
-
+    /**
+     * Returns the ending time of the event
+     * @return the ending time of the event
+     */
     public String getmEndTime() {
         return mEndTime;
     }
 
-    public void setmEndTime(String mEndTime) {
-        this.mEndTime = mEndTime;
-    }
-
+    /**
+     * Returns the description of the event
+     * @return the description of the event
+     */
     public String getmDescription() {
         return mDescription;
     }
 
-    public void setmDescription(String mDescription) {
-        this.mDescription = mDescription;
-    }
-
+    /**
+     * Returns the type of the event
+     * @return the type of the event
+     */
     public Type getmType() {
         return mType;
     }
 
-    public void setmType(Type mType) {
-        this.mType = mType;
-    }
-
-    public String getmImportance() {
-        return mImportance;
-    }
-
-    public void setmImportance(String mImportance) {
-        this.mImportance = mImportance;
-    }
-
-    private Date getDateFromString(String s){
+    private Date getDateFromString(String s) {
         try {
-            return new SimpleDateFormat("dd/MM/yyyy").parse(s);
+            return new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE).parse(s);
         } catch (ParseException e) {
             return null;
         }
     }
 
-    public Date getStartingDate(){
+    /**
+     * Returns the starting date of the event
+     * @return the starting date of the event as a Date
+     */
+    public Date getStartingDate() {
         return getDateFromString(mStartDate);
     }
 
-    public Date getEndingDate(){
-        return getDateFromString(mEndDate);
-    }
 }

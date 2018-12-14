@@ -1,10 +1,9 @@
 package be.he2b.esi.moblg5.g43320.gestipi.fragment;
 
-import android.content.Intent;
 import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,102 +14,76 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import be.he2b.esi.moblg5.g43320.gestipi.MainActivity;
 import be.he2b.esi.moblg5.g43320.gestipi.R;
-import be.he2b.esi.moblg5.g43320.gestipi.ViewEventActivity;
+import be.he2b.esi.moblg5.g43320.gestipi.databinding.EventsFragmentBinding;
+import be.he2b.esi.moblg5.g43320.gestipi.databinding.EventsItemBinding;
 import be.he2b.esi.moblg5.g43320.gestipi.db_access.EventHelper;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.Event;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.Type;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
+import be.he2b.esi.moblg5.g43320.gestipi.viewmodel.EventsViewModel;
 
+/**
+ * Represents the screen on which the users can see all the events.
+ */
 public class EventsFragment extends Fragment {
 
-    private RecyclerView mEventsRecyclerView;
-    private EventsAdapter mEventsAdapter;
-    private List<Event> events = new ArrayList<>();
-    private Button mAddBtn;
-    private User currentUser;
     private static final String UPDATE = "1";
     private static final String CREATE = "0";
+    private RecyclerView mEventsRecyclerView;
+    private EventsFragmentBinding binding;
+    private EventsAdapter mEventsAdapter;
+    private List<Event> events = new ArrayList<>();
+    private User currentUser;
+    private EventsViewModel viewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        System.out.println("OncreateView");
-        View view = inflater.inflate(R.layout.events_fragment, container, false);
-        mEventsRecyclerView = (RecyclerView) view.findViewById(R.id.events_recycler_view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        currentUser = ((MainActivity) getActivity()).getCurrentUser();
+        binding = DataBindingUtil.inflate(inflater, R.layout.events_fragment, container, false);
+        View view = binding.getRoot();
+        mEventsRecyclerView = binding.eventsRecyclerView;
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         mEventsRecyclerView.setLayoutManager(layoutManager);
         mEventsRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(4), true));
         mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mEventsRecyclerView.setNestedScrollingEnabled(false);
-        currentUser = ((MainActivity)getActivity()).getCurrentUser();
         mEventsAdapter = new EventsAdapter(events, currentUser);
         mEventsRecyclerView.setAdapter(mEventsAdapter);
-        mAddBtn = (Button) view.findViewById(R.id.event_add_btn);
-        boolean isChief = currentUser != null ? currentUser.isChief() : false;
-        handleAddBtn(isChief);
+        viewModel = new EventsViewModel(currentUser, (MainActivity) getActivity(), events, mEventsRecyclerView, mEventsAdapter, null);
+        binding.setViewModel(viewModel);
         updateOnEvent();
         return view;
     }
 
-    private void handleAddBtn(boolean isChief){
-        if (!isChief){
-            mAddBtn.setVisibility(View.GONE);
-        } else {
-            mAddBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), ViewEventActivity.class);
-                    intent.putExtra("currentUser", currentUser);
-                    intent.putExtra("mode", CREATE);
-                    startActivity(intent);
-                }
-            });
-        }
-    }
-
-    public void onResume(){
-        System.out.println("OnResume");
-        super.onResume();
-        if (events.size() != 0){
-            updateUI();
-            System.out.println("Resume Fait");
-        }
-    }
-
-    private void updateOnEvent(){
+    private void updateOnEvent() {
         EventHelper.getEventsCollection().addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (e != null){
-                    Log.d("EventsFragment", "Error "+e.getMessage());
+                if (e != null) {
+                    Log.d("EventsFragment", "Error " + e.getMessage());
                 }
-                for (DocumentChange doc : documentSnapshots.getDocumentChanges()){
-                    if (doc.getType() == DocumentChange.Type.ADDED){
+                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                    if (doc.getType() == DocumentChange.Type.ADDED) {
                         try {
-                            Event event = getEventFromSnapchot(doc.getDocument());
+                            Event event = getEventFromSnapshot(doc.getDocument());
                             events.add(event);
                             mEventsAdapter.notifyDataSetChanged();
-                        } catch (NullPointerException ex){
+                        } catch (NullPointerException ex) {
                             Toast.makeText(getContext(), "Impossible d'afficher les évènements", Toast.LENGTH_SHORT).show();
                         }
 
@@ -120,44 +93,8 @@ public class EventsFragment extends Fragment {
         });
     }
 
-    private void updateUI(){
-        events.clear();
-        EventHelper.getEventsCollection().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        events.add(document.toObject(Event.class));
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        deleteEventsIfPast();
-        mEventsAdapter.setmEvents(events);
-        mEventsRecyclerView.setAdapter(mEventsAdapter);
-        mEventsAdapter.notifyDataSetChanged();
-    }
-
-    private void deleteEventsIfPast(){
-        if (!events.isEmpty()){
-            for (Event e : events){
-                try {
-                    Date d = new SimpleDateFormat("dd/MM/yyyy").parse(e.getmEndDate());
-                    if (d.compareTo(new Date()) < 0){
-                        events.remove(e);
-                        EventHelper.deleteEvent(e.getmId());
-                    }
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private Event getEventFromSnapchot(DocumentSnapshot document) {
-        if (document == null){
+    private Event getEventFromSnapshot(DocumentSnapshot document) {
+        if (document == null) {
             throw new NullPointerException();
         } else {
             String id = (String) document.get("mId");
@@ -171,7 +108,7 @@ public class EventsFragment extends Fragment {
             String typeStr = (String) document.get("mType");
             String importance = (String) document.get("mImportance");
             Type type = Type.valueOf(typeStr);
-            return new Event(id, title, location, startDate, startTime, endDate, endTime, desc, type, importance);
+            return new Event(id, title, location, startDate, startTime, endDate, endTime, desc, type);
         }
     }
 
@@ -180,12 +117,27 @@ public class EventsFragment extends Fragment {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.onResume();
+    }
+
+    /**
+     * A Class that handles the decoration of the GridSpacingItem
+     */
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;
         private int spacing;
         private boolean includeEdge;
 
+        /**
+         * Create a new GridSpacingItemDecoration
+         * @param spanCount the number of span
+         * @param spacing the value of the spacing
+         * @param includeEdge a boolean indicating if the edge is included or not
+         */
         public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
             this.spanCount = spanCount;
             this.spacing = spacing;
@@ -215,68 +167,36 @@ public class EventsFragment extends Fragment {
 
     private class EventsHolder extends RecyclerView.ViewHolder {
 
-        private Event mEvent;
-        private TextView mEventTitle;
-        private Button mEventIcon;
-        private User mUser;
+        private EventsItemBinding binding;
 
-        public EventsHolder(LayoutInflater inflater, ViewGroup parent, User user){
-            super(inflater.inflate(R.layout.events_item, parent, false));
-            mEventTitle = (TextView) itemView.findViewById(R.id.events_title);
-            mEventIcon = (Button) itemView.findViewById(R.id.events_icon);
-            mUser = user;
-            mEventIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), ViewEventActivity.class);
-                    intent.putExtra("mode", UPDATE);
-                    intent.putExtra("event_id", mEvent.getmId());
-                    intent.putExtra("currentUser", mUser);
-                    startActivity(intent);
-                }
-            });
-        }
-
-        public void bind(Event event){
-            if (event != null){
-                mEvent = event;
-                mEventTitle.setText(event.getmTitle());
-                setButtonIcons();
-            }
-        }
-
-        private void setButtonIcons(){
-            switch (mEvent.getmType()){
-                case REUNION:
-                    mEventIcon.setBackgroundResource(R.drawable.event_play_type);
-                    break;
-                case HIKE: case CAMP: case REUNION_CAMP:
-                    mEventIcon.setBackgroundResource(R.drawable.event_camp_type);
-                    break;
-                case BAR_PI: case BAR_PI_SPECIAL:
-                    mEventIcon.setBackgroundResource(R.drawable.event_drink_type);
-                    break;
-                case OPE_BOUFFE:
-                    mEventIcon.setBackgroundResource(R.drawable.event_cook_type);
-                    break;
-                case SOIREE: case BAL_PI:
-                    mEventIcon.setBackgroundResource(R.drawable.event_dance_type);
-                    break;
-                default:
-                    mEventIcon.setBackgroundResource(R.drawable.event_else_type);
-            }
+        /**
+         * Creates a new EventsHolder
+         * @param binding the binding class linked to the holder
+         */
+        public EventsHolder(final EventsItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 
-    private class EventsAdapter extends RecyclerView.Adapter<EventsHolder>{
+    /**
+     * Handles all the item that sits in the recyclerView (the differents events)
+     */
+    public class EventsAdapter extends RecyclerView.Adapter<EventsHolder> {
 
         private List<Event> mEvents;
         private User mUser;
+        private EventsViewModel viewModel;
 
-        public EventsAdapter(List<Event> events, User user){
+        /**
+         * Creates a new EventsAdapter
+         * @param events the list of events
+         * @param user the current user
+         */
+        public EventsAdapter(List<Event> events, User user) {
             mEvents = events;
             mUser = user;
-            Collections.sort(mEvents, new Comparator<Event>(){
+            Collections.sort(mEvents, new Comparator<Event>() {
                 public int compare(Event e1, Event e2) {
                     return e1.getStartingDate().compareTo(e2.getStartingDate());
                 }
@@ -286,7 +206,8 @@ public class EventsFragment extends Fragment {
         @Override
         public EventsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new EventsHolder(layoutInflater, parent, mUser);
+            EventsItemBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.events_item, parent, false);
+            return new EventsHolder(binding);
         }
 
         @Override
@@ -296,15 +217,17 @@ public class EventsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(EventsHolder holder, int position) {
-            Event event = mEvents.get(position);
-            holder.bind(event);
+            Button button = holder.binding.eventsIcon;
+            viewModel = new EventsViewModel(mUser, (MainActivity) getActivity(), events, mEventsRecyclerView, mEventsAdapter, button);
+            viewModel.setEvent(mEvents.get(position));
+            holder.binding.setViewModel(viewModel);
         }
 
-        public List<Event> getmEvents() {
-            return mEvents;
-        }
-
-        public void setmEvents(List<Event> events){
+        /**
+         * Set the new lists of events and sort it chronologically
+         * @param events
+         */
+        public void setmEvents(List<Event> events) {
             mEvents = events;
             if (mEvents != null || !mEvents.isEmpty()) {
                 Collections.sort(mEvents, new Comparator<Event>() {

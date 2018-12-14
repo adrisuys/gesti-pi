@@ -3,6 +3,9 @@ package be.he2b.esi.moblg5.g43320.gestipi.pojo;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the type an event can have
+ */
 public enum Type {
 
     REUNION("1", "REUNION"),
@@ -16,30 +19,45 @@ public enum Type {
     CAMP("3", "CAMP"),
     AUTRES("0", "AUTRES");
 
-    private String importance;
-    private String libelle;
-    private static final Map<String, Type> MY_MAP = new HashMap<String, Type>();
+    private static final Map<String, Type> MY_MAP = new HashMap<>();
+
     static {
         for (Type type : values()) {
             MY_MAP.put(type.toString(), type);
         }
     }
 
-    private Type(String importance, String libelle){
+    private String importance;
+    private String libelle;
+
+    Type(String importance, String libelle) {
         this.importance = importance;
         this.libelle = libelle;
     }
 
-    public String getImportance(){
+    /**
+     * Gets the type corresponding to the given label
+     * @param libelle a given label
+     * @return the type corresponding to the given label
+     */
+    public static Type getTypeByLabel(String libelle) {
+        return MY_MAP.get(libelle);
+    }
+
+    /**
+     * Returns the importance corresponding to the type.
+     * @return the importance corresponding to the type.
+     */
+    public String getImportance() {
         return importance;
     }
 
-    public String toString(){
+    /**
+     * Returns the label
+     * @return the label
+     */
+    public String toString() {
         return libelle;
-    }
-
-    public static Type getTypeByLabel(String libelle){
-        return MY_MAP.get(libelle);
     }
 
 
