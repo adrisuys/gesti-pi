@@ -181,4 +181,18 @@ public class User extends Observable implements Serializable {
     public void setChief(Boolean chief) {
         mIsChief = chief;
     }
+
+    /**
+     * Returns the pseudo of the user
+     * @return the pseudo of the user
+     */
+    public String getPseudo(){
+        if (!mTotem.equals("")) {
+            return mTotem;
+        } else if (!mFirstname.equals("")) {
+            return mFirstname;
+        } else {
+            return mName;
+        }
+    }
 }

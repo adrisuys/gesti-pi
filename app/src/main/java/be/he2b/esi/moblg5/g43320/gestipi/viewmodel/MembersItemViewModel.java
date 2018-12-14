@@ -9,7 +9,11 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import be.he2b.esi.moblg5.g43320.gestipi.MainActivity;
+import be.he2b.esi.moblg5.g43320.gestipi.fragment.MembersFragment;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
 
 /**
@@ -21,14 +25,14 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
     public final ObservableField<String> mUserName = new ObservableField<>();
     private Intent callIntent;
     private final User mUser;
-    private final MainActivity activity;
+    private final MembersFragment activity;
 
     /**
      * Creates an instance of the class
      * @param activity the activity on which the class depends
      * @param mUser the current user
      */
-    public MembersItemViewModel(MainActivity activity, User mUser) {
+    public MembersItemViewModel(MembersFragment activity, User mUser) {
         this.activity = activity;
         this.mUser = mUser;
         setNickname();
@@ -66,9 +70,9 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
     }
 
     private void performCall(Intent callIntent) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            if (! ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CALL_PHONE)) {
-                ActivityCompat.requestPermissions(activity, new String[]{
+        if (ContextCompat.checkSelfPermission(activity.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (! ActivityCompat.shouldShowRequestPermissionRationale(activity.getActivity(), Manifest.permission.CALL_PHONE)) {
+                ActivityCompat.requestPermissions(activity.getActivity(), new String[]{
                         Manifest.permission.CALL_PHONE
                 }, REQUEST_CODE);
             }
@@ -77,35 +81,10 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
         }
     }
 
-    /**
-     * Launches a call if the permissions are granted
-     * @param requestCode the code requested
-     * @param permissions the lists of permissions
-     * @param grantResults the results granted
-     * @param intent the intent
-     */
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults, Intent intent) {
-        switch (requestCode) {
-            case REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    activity.startActivity(callIntent);
-                }  // permission denied, boo! Disable the // functionality that depends on this permission.
-            }
-        }
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        //activity.getmMembersAdapter().getFilter().filter(s);
+        activity.filter(s.toString());
     }
-
-    /*
-    public void bind(User user) {
-        if (user != null) {
-            mUser = user;
-            String pseudo = user.getmTotem().equals("") ? user.getmName() : user.getmTotem();
-            mUserName.set(pseudo);
-        } else {
-            Toast.makeText(activity, "Impossible d'afficher les données de l'utilisateur", Toast.LENGTH_SHORT).show();
-        }
-    }*/
-
 
     @Override
     public void onCreate() {

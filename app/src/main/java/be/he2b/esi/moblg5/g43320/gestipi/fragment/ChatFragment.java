@@ -2,6 +2,7 @@ package be.he2b.esi.moblg5.g43320.gestipi.fragment;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -50,17 +51,19 @@ public class ChatFragment extends Fragment {
     private ChatAdapter mChatAdapter;
     private final List<Message> messages = new ArrayList<>();
     private ChatViewModel viewModel;
+    private Uri myUri;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ChatFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.chat_fragment, container, false);
         View view = binding.getRoot();
         RecyclerView mChatRecyclerView = binding.chatRecyclerView;
-        mChatRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setReverseLayout(true);
+        mChatRecyclerView.setLayoutManager(llm);
         User currentUser = (User) getActivity().getIntent().getSerializableExtra("currentUser");
         mChatAdapter = new ChatAdapter(messages, currentUser, Glide.with(view));
         mChatRecyclerView.setAdapter(mChatAdapter);
-        ImageView imgView = binding.chatImagePreview;
-        viewModel = new ChatViewModel(currentUser, this, imgView);
+        viewModel = new ChatViewModel(currentUser, this);
         binding.setViewModel(viewModel);
         updateUI();
         return view;
@@ -99,11 +102,7 @@ public class ChatFragment extends Fragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        Collections.reverse(messages);
     }
 
     @Override
@@ -116,6 +115,14 @@ public class ChatFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         viewModel.handleResponse(requestCode, resultCode, data);
+    }
+
+    public void setUri(Uri myUri){
+        this.myUri = myUri;
+    }
+
+    public Uri getUri(){
+        return myUri;
     }
 
     private class ChatHolder extends RecyclerView.ViewHolder {

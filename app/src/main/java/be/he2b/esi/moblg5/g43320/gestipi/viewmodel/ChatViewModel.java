@@ -1,6 +1,8 @@
 package be.he2b.esi.moblg5.g43320.gestipi.viewmodel;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,11 +10,13 @@ import android.databinding.BaseObservable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -20,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -27,6 +32,7 @@ import java.util.UUID;
 
 import be.he2b.esi.moblg5.g43320.gestipi.db_access.ChatHelper;
 import be.he2b.esi.moblg5.g43320.gestipi.fragment.ChatFragment;
+import be.he2b.esi.moblg5.g43320.gestipi.pojo.Message;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
 
 import static android.app.Activity.RESULT_OK;
@@ -43,18 +49,15 @@ public class ChatViewModel extends BaseObservable implements ViewModel {
     private Uri uriImageSelected;
     private final User currentUser;
     private final ChatFragment activity;
-    private final ImageView imageView;
 
     /**
      * Creates an instance of the class
      * @param currentUser the user
      * @param activity the activity the class depends on
-     * @param imageView the imageview that stocks a preview of the image selected by the user
      */
-    public ChatViewModel(User currentUser, ChatFragment activity, ImageView imageView) {
+    public ChatViewModel(User currentUser, ChatFragment activity) {
         this.currentUser = currentUser;
         this.activity = activity;
-        this.imageView = imageView;
     }
 
     /**
@@ -68,15 +71,10 @@ public class ChatViewModel extends BaseObservable implements ViewModel {
             e.printStackTrace();
         }
         if (!TextUtils.isEmpty(content.get())) {
-            if (!mImageSelected.get() || uriImageSelected == null) {
-                ChatHelper.createMessageForChat(content.get(), currentUser);
-                Toast.makeText(activity.getContext(), "Message envoyé", Toast.LENGTH_SHORT).show();
-                content.set("");
-            } else {
-                //uploadImageInFirebaseAndSend();
-                content.set("");
-                uriImageSelected = null;
-            }
+            ChatHelper.createMessageForChat(content.get(), currentUser);
+            Toast.makeText(activity.getContext(), "Message envoyé", Toast.LENGTH_SHORT).show();
+            content.set("");
+            uriImageSelected = null;
             mImageSelected.set(false);
         } else {
             Toast.makeText(activity.getContext(), "Vous devez entrer du texte !", Toast.LENGTH_SHORT).show();
@@ -101,14 +99,12 @@ public class ChatViewModel extends BaseObservable implements ViewModel {
             if (resultCode == RESULT_OK) { //SUCCESS
                 this.uriImageSelected = data.getData();
                 mImageSelected.set(true);
-                Glide.with(activity)
-                     .load(uriImageSelected)
-                     .apply(RequestOptions.circleCropTransform())
-                     .into(imageView);
+                uploadImage();
                 Toast.makeText(activity.getContext(), "Image sélectionnée", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(activity.getContext(), "Aucune image n'a été choisie", Toast.LENGTH_SHORT).show();
             }
+            activity.setUri(uriImageSelected);
         }
     }
 
@@ -125,19 +121,48 @@ public class ChatViewModel extends BaseObservable implements ViewModel {
         }
     }
 
-    private void uploadImageInFirebaseAndSend() {
-        String uuid = UUID.randomUUID().toString();
-        StorageReference mImageRef = FirebaseStorage.getInstance().getReference(uuid);
-        mImageRef.putFile(this.uriImageSelected)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        String pathImageSavedInFirebase = taskSnapshot.getMetadata().getDownloadUrl().toString();
-                        String message = content.get();
-                        ChatHelper.createImageMessageForChat(message, currentUser, pathImageSavedInFirebase);
-                    }
-                });
-        Toast.makeText(activity.getContext(), "Message envoyé", Toast.LENGTH_SHORT).show();
+    private void uploadImage() {
+        if (uriImageSelected != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(activity.getContext());
+            progressDialog.setTitle("Chargement...");
+            progressDialog.show();
+            FirebaseStorage mStorageRef = FirebaseStorage.getInstance();
+            StorageReference storage = mStorageRef.getReference();
+            final StorageReference ref = storage.child(System.currentTimeMillis() + "." + getFileExtension(uriImageSelected));
+            ref.putFile(uriImageSelected).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialog.dismiss();
+                                }
+                            }, 500);
+                            ChatHelper.createImageMessageForChat(content.get(), currentUser, uri.toString());
+                        }
+                    });
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                            .getTotalByteCount());
+                    progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                }
+            });
+        } else {
+            Toast.makeText(activity.getContext(), "Aucune image sélectionnée", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = activity.getActivity().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     @Override

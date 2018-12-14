@@ -1,13 +1,31 @@
 package be.he2b.esi.moblg5.g43320.gestipi.viewmodel;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.UUID;
+
 import be.he2b.esi.moblg5.g43320.gestipi.MainActivity;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.Message;
 import be.he2b.esi.moblg5.g43320.gestipi.pojo.User;
@@ -28,6 +46,7 @@ public class ChatItemViewModel extends BaseObservable implements ViewModel {
     private final ImageView imageView;
     private final RelativeLayout rootContainer;
     private final LinearLayout messageContainer;
+    private final Message message;
 
     /**
      * Creates an instance of the class
@@ -45,6 +64,7 @@ public class ChatItemViewModel extends BaseObservable implements ViewModel {
         this.imageView = imageView;
         this.rootContainer = rootContainer;
         this.messageContainer = messageContainer;
+        this.message = message;
         bind(message, glide);
     }
 
@@ -59,7 +79,7 @@ public class ChatItemViewModel extends BaseObservable implements ViewModel {
             }
             if (message.getUrlImage() != null) {
                 hasImage.set(true);
-                glide.load(message.getUrlImage()).into(imageView);
+                glide.load(message.getUrlImage()).apply(new RequestOptions().override(200,400)).into(imageView);
             } else {
                 hasImage.set(false);
             }
@@ -78,7 +98,6 @@ public class ChatItemViewModel extends BaseObservable implements ViewModel {
         this.rootContainer.requestLayout();
 
     }
-
 
     @Override
     public void onCreate() {

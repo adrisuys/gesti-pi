@@ -77,7 +77,8 @@
                         android:text="@={viewModel.startDate}"
                         android:enabled="@{viewModel.isChief ? true : false}"
                         android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
-                        android:inputType="date"/>
+                        android:onClick="@{() -> viewModel.openDatePicker(true)}"
+                        android:focusable="false"/>
                 </LinearLayout>
                 <!--START_TIME-->
                 <LinearLayout
@@ -97,7 +98,9 @@
                         android:text="@={viewModel.startTime}"
                         android:enabled="@{viewModel.isChief ? true : false}"
                         android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
-                        android:inputType="time"/>
+                        android:onClick="@{() -> viewModel.openTimePicker(true)}"
+                        android:focusable="false"
+                        />
                 </LinearLayout>
                 <!--END_DATE-->
                 <LinearLayout
@@ -117,7 +120,8 @@
                         android:text="@={viewModel.endDate}"
                         android:enabled="@{viewModel.isChief ? true : false}"
                         android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
-                        android:inputType="date"/>
+                        android:onClick="@{() -> viewModel.openDatePicker(false)}"
+                        android:focusable="false"/>
                 </LinearLayout>
                 <!--END_TIME-->
                 <LinearLayout
@@ -137,7 +141,8 @@
                         android:text="@={viewModel.endTime}"
                         android:enabled="@{viewModel.isChief ? true : false}"
                         android:textColor="@{viewModel.isRed ? @color/red : @color/black}"
-                        android:inputType="time"/>
+                        android:onClick="@{() -> viewModel.openTimePicker(false)}"
+                        android:focusable="false"/>
                 </LinearLayout>
                 <!--TYPE-->
                 <LinearLayout

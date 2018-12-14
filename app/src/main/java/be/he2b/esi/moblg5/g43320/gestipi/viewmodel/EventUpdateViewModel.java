@@ -1,18 +1,26 @@
 package be.he2b.esi.moblg5.g43320.gestipi.viewmodel;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.v7.app.AppCompatActivity;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
 import android.widget.RadioGroup;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import be.he2b.esi.moblg5.g43320.gestipi.R;
 import be.he2b.esi.moblg5.g43320.gestipi.db_access.EventHelper;
@@ -49,7 +57,6 @@ public class EventUpdateViewModel extends BaseObservable implements ViewModel {
     public EventUpdateViewModel(AppCompatActivity app, User user, String editionMode) {
         isChief.set(user.isChief());
         this.editionMode = editionMode;
-        System.out.println(this.editionMode);
         this.app = app;
         initScreen();
     }
@@ -258,4 +265,50 @@ public class EventUpdateViewModel extends BaseObservable implements ViewModel {
         }
         this.type.set(type.toString());
     }
+
+    /**
+     * Open the date picker and handles the choice of the user
+     * @param isStarting a boolean indicating if it is the starting date that is being updated, false if it is the end date
+     */
+    public void openDatePicker(final boolean isStarting){
+        final Calendar myCalendar = Calendar.getInstance();
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                String myFormat = "MM/dd/yy"; //In which you need put here
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+                if (isStarting){
+                    startDate.set(sdf.format(myCalendar.getTime()));
+                } else {
+                    endDate.set(sdf.format(myCalendar.getTime()));
+                }
+            }
+        };
+        new DatePickerDialog(app, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void openTimePicker(final boolean isStarting){
+        Calendar mcurrentTime = Calendar.getInstance();
+        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = mcurrentTime.get(Calendar.MINUTE);
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(app, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                if (isStarting){
+                    startTime.set(selectedHour + ":" + selectedMinute);
+                } else {
+                    endTime.set(selectedHour + ":" + selectedMinute);
+                }
+            }
+        }, hour, minute, true);//Yes 24 hour time
+        mTimePicker.setTitle("Choisissez une heure");
+        mTimePicker.show();
+    }
+
+
 }

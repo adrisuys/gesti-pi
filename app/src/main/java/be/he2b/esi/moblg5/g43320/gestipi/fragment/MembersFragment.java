@@ -5,10 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentChange;
@@ -44,6 +49,8 @@ public class MembersFragment extends Fragment {
         mMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMembersAdapter = new MembersAdapter(users);
         mMembersRecyclerView.setAdapter(mMembersAdapter);
+        MembersItemViewModel viewModel = new MembersItemViewModel(this, ((MainActivity) getActivity()).getCurrentUser());
+        membersBinding.setViewModel(viewModel);
         updateUI();
         return membersBinding.getRoot();
     }
@@ -79,6 +86,10 @@ public class MembersFragment extends Fragment {
         //updateUI();
     }
 
+    public MembersAdapter getmMembersAdapter() {
+        return mMembersAdapter;
+    }
+
     private class MembersHolder extends RecyclerView.ViewHolder {
 
         private final MemberInfosItemBinding binding;
@@ -93,9 +104,10 @@ public class MembersFragment extends Fragment {
         }
     }
 
-    private class MembersAdapter extends RecyclerView.Adapter<MembersHolder> {
+    public class MembersAdapter extends RecyclerView.Adapter<MembersHolder> {
 
         private List<User> mUsers;
+        private List<User> filtered;
         private MembersItemViewModel viewModel;
 
         /**
@@ -120,11 +132,31 @@ public class MembersFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(MembersHolder holder, int position) {
-            viewModel = new MembersItemViewModel((MainActivity) getActivity(), users.get(position));
+            viewModel = new MembersItemViewModel((MembersFragment) getParentFragment(), users.get(position));
             holder.binding.setViewModel(viewModel);
         }
 
+        public void filterList(List<User> filterdNames) {
+            this.mUsers = filterdNames;
+            notifyDataSetChanged();
+        }
+    }
 
+    public void filter(String text){
+        List<User> filterdNames = new ArrayList<>();
+        for (User s : users) {
+            System.out.println("--------"+text);
+            System.out.println("--------"+s.getPseudo());
+            if (s.getPseudo().toLowerCase().contains(text.toLowerCase())) {
+                //adding the element to filtered list
+                filterdNames.add(s);
+                System.out.println(s.getPseudo());
+            }
+        }
+        System.out.println(filterdNames.size());
+
+        //calling a method of the adapter class and passing the filtered list
+        mMembersAdapter.filterList(filterdNames);
     }
 
 }

@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/chat_item_image_sent"
-            android:layout_width="100dip"
-            android:layout_height="100dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_alignParentTop="true"
             android:visibility="@{viewModel.hasImage ? View.VISIBLE : View.GONE}"
