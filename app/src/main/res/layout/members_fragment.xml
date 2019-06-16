@@ -28,7 +28,7 @@
             android:background="@drawable/button_radius_white_color"
             android:textColor="@color/colorPrimary"
             android:padding="5dp"
-            android:onTextChanged="@{viewModel.onTextChanged}"/>
+            android:onTextChanged="@{viewModel::onTextChanged}"/>
 
         <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/members_recycler_view"

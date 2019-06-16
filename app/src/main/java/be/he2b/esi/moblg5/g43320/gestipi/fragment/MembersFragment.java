@@ -50,6 +50,7 @@ public class MembersFragment extends Fragment {
         mMembersAdapter = new MembersAdapter(users);
         mMembersRecyclerView.setAdapter(mMembersAdapter);
         MembersItemViewModel viewModel = new MembersItemViewModel((MainActivity) getActivity(), ((MainActivity) getActivity()).getCurrentUser());
+        //MembersItemViewModel viewModel = new MembersItemViewModel(this, ((MainActivity) getActivity()).getCurrentUser());
         membersBinding.setViewModel(viewModel);
         updateUI();
         return membersBinding.getRoot();
@@ -133,6 +134,7 @@ public class MembersFragment extends Fragment {
         @Override
         public void onBindViewHolder(MembersHolder holder, int position) {
             viewModel = new MembersItemViewModel((MainActivity) getActivity(), users.get(position));
+            //viewModel = new MembersItemViewModel((MembersFragment) getParentFragment(), users.get(position));
             holder.binding.setViewModel(viewModel);
         }
 

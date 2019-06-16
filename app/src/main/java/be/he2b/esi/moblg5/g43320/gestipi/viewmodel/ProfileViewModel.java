@@ -87,6 +87,7 @@ public class ProfileViewModel extends BaseObservable implements ViewModel {
      * Update the profile in the firebase and return to the previous screen
      */
     public void onClickUpdateButton() {
+        // remove keyboard from screen
         try{
             InputMethodManager imm = (InputMethodManager) app.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(app.getCurrentFocus().getWindowToken(), 0);

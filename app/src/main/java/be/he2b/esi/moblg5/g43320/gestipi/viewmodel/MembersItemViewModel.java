@@ -26,6 +26,16 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
     private Intent callIntent;
     private final User mUser;
     private final MainActivity activity;
+    //private final MembersFragment activity;
+
+    /*
+    public MembersItemViewModel(MembersFragment activity, User mUser) {
+        this.activity = activity;
+        this.mUser = mUser;
+        setNickname();
+    }
+
+     */
 
     /**
      * Creates an instance of the class
@@ -80,6 +90,20 @@ public class MembersItemViewModel extends BaseObservable implements ViewModel {
             activity.startActivity(callIntent);
         }
     }
+
+    /*
+    private void performCall(Intent callIntent) {
+        if (ContextCompat.checkSelfPermission(activity.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (! ActivityCompat.shouldShowRequestPermissionRationale(activity.getActivity(), Manifest.permission.CALL_PHONE)) {
+                ActivityCompat.requestPermissions(activity.getActivity(), new String[]{
+                        Manifest.permission.CALL_PHONE
+                }, REQUEST_CODE);
+            }
+        } else {
+            activity.startActivity(callIntent);
+        }
+    }
+    */
 
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         //activity.getmMembersAdapter().getFilter().filter(s);
